@@ -25,7 +25,7 @@ SECRET_KEY = '35r95d4x%fai67=0wkn(*ztf3_4=hxh9aj&csslws43+6w_8gj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['astroblog-bkmodding.c9users.io']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -118,3 +118,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
