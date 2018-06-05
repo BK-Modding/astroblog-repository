@@ -74,12 +74,15 @@ WSGI_APPLICATION = 'astroblog.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+   'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'kappa',
+        'USER': 'kappa',
+        'PASSWORD': 'kappa',
+        'HOST': 'kappa',
+        'PORT': 'kappa',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -121,6 +124,7 @@ STATIC_URL = '/static/'
 
 
 try:
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
+    print("import error")
     pass
