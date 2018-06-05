@@ -1,0 +1,60 @@
+{% extends 'layout.html' %} 
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col s4">
+            {% if login_error %}
+            <div class="cardl">
+                <div class="card-content red white-text">
+                    {{ login_error }}
+                </div>
+            </div>
+            {% endif %}
+            <h3>Login</h3>
+            <form id="loginform" method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="input-field">
+                    <input placeholder="Enter your username here" name="username" id="username" type="text" class="validate">
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-field">
+                    <input placeholder="Enter your password here" name="password" id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                </div>
+                <a class="btn waves-effect purple hoverable" href="javascript:{document.getElementById('loginform').submit()}">Login</a>
+            </form>
+        </div>
+        <div class="col s4 offset-s4 right-align">
+            {% if signup_error %}
+            <div class="card">
+                <div class="card-content center-align red white-text">
+                    {{ signup_error }}
+                </div>
+            </div>
+            {% endif %}
+            <h3>Signup</h3>
+            <form id="signupform" method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                <div class="input-field">
+                    <input placeholder="Enter your username here" name="username" id="username" type="text" class="validate">
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-field">
+                    <input placeholder="Enter your email here" name="email" id="email" type="email" class="validate">
+                    <label for="email">Email</label>
+                    <span class="helper-text" data-error="Invalid email address" data-success="Valid">Enter a valid email: example@website.com</span>
+                </div>
+                <div class="input-field">
+                    <input placeholder="Password to register with" name="password" id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                </div>
+                <div class="input-field">
+                    <input placeholder="Confirm your password here" name="confirmpassword" id="confirmpassword" type="password" class="validate">
+                    <label for="confirmpassword">Confirm password</label>
+                </div>
+                <a class="btn waves-effect blue hoverable" href="javascript:{document.getElementById('signupform').submit()}">Signup</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
