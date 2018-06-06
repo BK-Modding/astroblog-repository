@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+{% load staticfiles %} 
+{% block content %}
+    <div class="container">
+        {% if not post.is_denied %}
+            {% if not post.is_approved %}
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card purple white-text">
+                            <div class="card-content">
+                                This post has not yet been approved by astroblog moderation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="row">
+                    <div class="col s12">
+                        <div class="card red white-text">
+                            <div class="card-content">
+                                This post has been denied by astroblog moderation
+                                <br>
+                                Moderation comments: {{ post.moderation_comments }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        {% endif %}
+        <div class="row">
+            <div class="col s12">
+                <h2>{{ post.title }}</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                <p class = "flow-text">{{ post.dateandtime }}</p>
+            </div>
+            <div class="col s4 offset-s4 right-align">
+                <p class = "flow-text">By {{ post.author.username }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <em>{{ post.intro }}</em>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <img src="{{ post.image.url }}" class="responsive-img"></img>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col s12">
+                {{ post.body | safe }}
+            </div>
+        </div>
+        <br>
+        {% if post.is_approved and not post.is_denied %}
+            <div class="row">
+                <div class="col s6">
+                    {% if not user.username == post.author.username %}
+                        {% if not starred %}
+                            <a href="javascript:{document.getElementById('starringform').submit();}" class = "btn blue waves-effect hoverable">Star {{ post.totalstars }}</a>
+                            <form id="starringform" action="{% url 'star' post.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name=""/>
+                            </form>
+                        {% else %}
+                            <a href="javascript:{document.getElementById('unstarringform').submit();}" class = "btn green waves-effect hoverable">Starred {{ post.totalstars }}</a>
+                            <form id="unstarringform" action="{% url 'unstar' post.id %}" method="post">
+                                 {% csrf_token %}
+                                <input type="hidden" name=""/>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <a href="" class = "btn purple waves-effect hoverable">Stars {{ post.totalstars }}</a>
+                    {% endif %}
+                    
+                    
+                    <a href="" class = "btn blue waves-effect hoverable">Keep</a>
+                </div>
+                 <div class="col s6 right-align">
+                     <a href="" class = "btn blue waves-effect hoverable">Share</a>
+                 </div>
+            </div>
+            <div class="row">
+                <p class = "flow-text">Comments: </p>
+                <hr>
+                {{ post.comments.length }}
+                {% for comment in post.comments.all %}
+                    {{ comment.commenter }}
+                    <br>
+                    {{ comment.comment }}
+                    <hr>
+                {% empty %}
+                    No comments
+                {% endfor %}
+                <form id="commentform" method="post" action="{% url 'comment' post.id %}">
+                    {% csrf_token %}
+                    <textarea name="commentarea" id="commentarea" placeholder="Write a comment....."></textarea>
+                </form>
+                <a href="javascript:{document.getElementById('commentform').submit();}" class = "btn purple waves-effect hoverable">Comment</a>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

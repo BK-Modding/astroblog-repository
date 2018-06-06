@@ -1,0 +1,54 @@
+{% extends 'layout.html' %} 
+{% load staticfiles %} 
+{% block content %}
+<script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/tinymce/custom.js' %}"></script>
+
+<div class="container">
+    {% if post_error %}
+        <div class="card">
+            <div class="card-content red white-text">
+                {{ post_error }}
+            </div>
+        </div>
+    {% endif %}
+    <h2>New post</h2>
+    <form id="newpostform" method="post" action="{% url 'newpost' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="input-field">
+            <p class="flow-text">Title:</p>
+            {{ form.title }}
+        </div>
+        <div class="input-field">
+            <p class="flow-text">Introduction:</p>
+            {{ form.intro }}
+        </div>
+        <div class = "input-field">
+            <p class="flow-text">Category:</p>
+            {{ form.category }}
+        </div>
+        <div class="input-field">
+            <p class="flow-text">Blogpost Image:</p>
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>Image</span>
+                    {{ form.image }}
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+        </div>
+        <p class="flow-text">Post body:</p>
+        <div class="input-field">
+            {{ form.body }}
+        </div>
+        {{ form.errors }}
+        {{ form.non_field_errors }}
+    </form>
+    <a href="javascript:{document.getElementById('newpostform').submit()}" class = "btn btn-large waves-effect purple hoverable">Submit</a>
+    <br>
+    <br>
+    <br>
+</div>
+{% endblock %}

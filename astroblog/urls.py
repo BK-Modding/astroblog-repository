@@ -15,10 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from . import views
 import blog.views
+import accounts.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('', blog.views.index, name='index')
-]
+    path('', blog.views.index, name='index'),
+    path('aboutus/', views.aboutus, name='aboutus'),
+    path('posts/', include('blog.urls')),
+    path('tinymce/', include('tinymce.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

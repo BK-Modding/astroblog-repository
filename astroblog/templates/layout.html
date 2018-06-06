@@ -18,21 +18,51 @@
 </head>
 
 <body>
-    <!-- Dropdown Structure -->
-    <ul id="dropdown1" class="dropdown-content">
-        <li><a href="#!">one</a></li>
-        <li><a href="#!">two</a></li>
+    <ul id="categories" class="dropdown-content">
+        <li><a href="#!">Neutron stars and Pulsars</a></li>
         <li class="divider"></li>
-        <li><a href="#!">three</a></li>
+        <li><a href="#!">Black holes and Quasars</a></li>
+        <li class="divider"></li>
+        <li><a href="#!">Galaxies and cosmology</a></li>
+        <li class="divider"></li>
+        <li><a href="#!">Relativity in Astro</a></li>
+        <li class="divider"></li>
+        <li><a href="#!">Particle Physics and Quantum Mechanics in Astro</a></li>
+        <li class="divider"></li>
+        <li><a href="#!">String Theory in Astro</a></li>
+        <li class="divider"></li>
+        <li><a href="#!">Astronomy</a></li>
+        <li class="divider"></li>
+        <li><a href="#!">Scientific Literature</a></li>
     </ul>
     <nav>
         <div class="nav-wrapper black">
-            <a href="#!" class="brand-logo">Logo</a>
+            <a href="{% url 'index' %}" class="brand-logo">Astroblog</a>
             <ul class="right hide-on-med-and-down">
-                <li><a href="sass.html">Sass</a></li>
-                <li><a href="badges.html">Components</a></li>
-                <!-- Dropdown Trigger -->
-                <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li>
+                 <li><a href="{% url 'newpost' %}"><i class="material-icons">add</i></a></li>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'latest' %}">Latest posts</a></li>
+                <li><a class="dropdown-trigger" href="" data-target="categories">Categories<i class="material-icons right">arrow_drop_down</i></a></li>
+                <li><a href="{% url 'aboutus' %}">About us</a></li>
+                <li><a href="">Have a query?</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="sass.html">My Posts</a></li>
+                <li><a href="sass.html">My Keeps</a></li>
+                {% block notification_block %}
+                    <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+                {% endblock %}
+                {% if user.is_staff %}
+                <li><a href="{% url 'approvals' %}">Approvals</a></li>
+                <li><a href="sass.html">Queries</a></li>
+                {% endif %}
+                <li><a class="blue-grey" href="javascript:{document.getElementById('logoutform').submit();}">Log out</a></li>
+                <form id="logoutform" action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" />
+                </form>
+                {% else %}
+                <li><a href="{% url 'signup' %}">Signup/Login</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
@@ -67,7 +97,7 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-    <script type="text/javascript" src="{% static 'custom.js' %}"></script>
+    <script type="text/javascript" src="{% static 'site.js' %}"></script>
 </body>
 
 </html>
