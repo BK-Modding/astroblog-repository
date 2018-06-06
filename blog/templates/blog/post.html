@@ -47,6 +47,11 @@
         </div>
         <div class="row">
             <div class="col s12">
+                 <h6>Written under <strong>{{ post.category }}</strong></h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
                 <img src="{{ post.image.url }}" class="responsive-img"></img>
             </div>
         </div>
@@ -60,26 +65,42 @@
         {% if post.is_approved and not post.is_denied %}
             <div class="row">
                 <div class="col s6">
-                    {% if not user.username == post.author.username %}
-                        {% if not starred %}
-                            <a href="javascript:{document.getElementById('starringform').submit();}" class = "btn blue waves-effect hoverable">Star {{ post.totalstars }}</a>
-                            <form id="starringform" action="{% url 'star' post.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name=""/>
-                            </form>
+                    {% if user.is_authenticated %}
+                        {% if not user.username == post.author.username %}
+                            {% if not starred %}
+                                <a href="javascript:{document.getElementById('starringform').submit();}" class = "btn blue waves-effect hoverable">Star {{ post.totalstars }}</a>
+                                <form id="starringform" action="{% url 'star' post.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name=""/>
+                                </form>
+                            {% else %}
+                                <a href="javascript:{document.getElementById('unstarringform').submit();}" class = "btn green waves-effect hoverable">Starred {{ post.totalstars }}</a>
+                                <form id="unstarringform" action="{% url 'unstar' post.id %}" method="post">
+                                     {% csrf_token %}
+                                    <input type="hidden" name=""/>
+                                </form>
+                            {% endif %}
+                            {% if not kept %}
+                                <a href="javascript:{document.getElementById('keepingform').submit();}" class = "btn blue waves-effect hoverable">Keep {{ post.totalkeeps }}</a>
+                                <form id="keepingform" action="{% url 'keep' post.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name=""/>
+                                </form>
+                            {% else %}
+                                <a href="javascript:{document.getElementById('unkeepingform').submit();}" class = "btn green waves-effect hoverable">Kept {{ post.totalkeeps }}</a>
+                                <form id="unkeepingform" action="{% url 'unkeep' post.id %}" method="post">
+                                     {% csrf_token %}
+                                    <input type="hidden" name=""/>
+                                </form>
+                            {% endif %}
                         {% else %}
-                            <a href="javascript:{document.getElementById('unstarringform').submit();}" class = "btn green waves-effect hoverable">Starred {{ post.totalstars }}</a>
-                            <form id="unstarringform" action="{% url 'unstar' post.id %}" method="post">
-                                 {% csrf_token %}
-                                <input type="hidden" name=""/>
-                            </form>
+                            <a href="" class = "btn purple waves-effect hoverable">Stars {{ post.totalstars }}</a>
+                            <a href="" class = "btn blue waves-effect hoverable">Keeps {{ post.totalkeeps }}</a>
                         {% endif %}
                     {% else %}
-                        <a href="" class = "btn purple waves-effect hoverable">Stars {{ post.totalstars }}</a>
+                        <a href="{% url 'login' %}" class = "btn purple waves-effect hoverable">Stars {{ post.totalstars }}</a>
+                        <a href="{% url 'login' %}" class = "btn blue waves-effect hoverable">Keeps {{ post.totalkeeps }}</a>
                     {% endif %}
-                    
-                    
-                    <a href="" class = "btn blue waves-effect hoverable">Keep</a>
                 </div>
                  <div class="col s6 right-align">
                      <a href="" class = "btn blue waves-effect hoverable">Share</a>
@@ -90,9 +111,14 @@
                 <hr>
                 {{ post.comments.length }}
                 {% for comment in post.comments.all %}
-                    {{ comment.commenter }}
+                    <span><a href="">{{ comment.commenter }}</a> on {{ comment.comment_date_and_time }}</span>
                     <br>
-                    {{ comment.comment }}
+                    <div class="left-align">
+                           {{ comment.comment }} 
+                    </div>
+                    <div class="right-align">
+                        <span class="flow-text">{{ comment.planets }}</span> <a class="tooltipped" data-position="top" data-tooltip="Give planet" href=""><img width="2%" height="2%" src="{% static 'planet.png' %}"></a>
+                    </div>
                     <hr>
                 {% empty %}
                     No comments

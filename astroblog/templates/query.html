@@ -1,0 +1,44 @@
+{% extends 'layout.html' %} 
+{% load staticfiles %} 
+{% block content %}
+
+<div class="container">
+    {% if query_error %}
+        <div class="card">
+            <div class="card-content red white-text">
+                {{ query_error }}
+            </div>
+        </div>
+    {% endif %}
+    <h2>New query</h2>
+    <form id="newqueryform" method="post" action="{% url 'query' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="input-field">
+            <p class="flow-text">Your Name:</p>
+            <input type="text" name="name">
+        </div>
+        <div class="input-field">
+            <p class="flow-text">Email address:</p>
+            <input placeholder="Enter your email here" name="email" id="email" type="email" class="validate">
+            <span class="helper-text" data-error="Invalid email address" data-success="Valid">Enter a valid email: example@website.com</span>
+        </div>
+        <div class = "input-field">
+            <p class="flow-text">Your Query:</p>
+            <textarea id="querybody" class="materialize-textarea" name="querybody"></textarea>
+        </div>
+        {{ form.errors }}
+        {{ form.non_field_errors }}
+    </form>
+    <a href="javascript:{document.getElementById('newqueryform').submit()}" class = "btn btn-large waves-effect purple hoverable">Submit Query</a>
+    <br>
+    {% if query_success %}
+        <div class="card green white-text">
+            <div class="card-content">
+                Your query has been successfully submitted, one of our representatives will get back to you shortly.
+            </div>
+        </div>
+    {% endif %}
+    <br>
+    <br>
+</div>
+{% endblock %}

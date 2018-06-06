@@ -1,0 +1,50 @@
+{% extends 'layout.html' %} 
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h1>Blog posts under {{ category }}</h1>
+        </div>
+    </div>
+    <hr> 
+    {% for post in posts %}
+    <div class="row">
+        <div class="col s12">
+            <a href="{% url 'blogpost' post.id %}">
+                <h4>{{ post.title }}</h4>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s4">
+            <h6>{{ post.dateandtime }}</h6>
+        </div>
+        <div class="col s8 right-align">
+            <h6>Written by {{ post.author.username }}</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <em>{{ post.intro }}</em>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <h6>Written under {{ post.category }}</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <img src="{{ post.image.url }}" class="responsive-img" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            {{ post.summary | safe }}<a href="{% url 'blogpost' post.id %}">....(read more)</a>
+        </div>
+    </div>
+    {% empty %}
+    <p class="flow-text">No posts</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -28,4 +28,9 @@ urlpatterns = [
     path('aboutus/', views.aboutus, name='aboutus'),
     path('posts/', include('blog.urls')),
     path('tinymce/', include('tinymce.urls')),
+    path('query/', views.query, name='query'),
+    path('query/viewqueries/', views.viewqueries, name='viewqueries'),
+    path('query/<int:query_id>/reply', views.replyquery, name='replyquery'),
+    path('query/<int:query_id>/delete', views.deletequery, name='deletequery'),
+    path('unauthorized/', views.unauthorized, name='unauthorized')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

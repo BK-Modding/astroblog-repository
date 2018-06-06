@@ -12,4 +12,4 @@ class TinyMCEWidget(TinyMCE):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ['dateandtime', 'author', 'totalstars', 'starredby', 'keptby', 'comments']
+        exclude = ['dateandtime', 'author', 'totalstars', 'totalkeeps', 'starredby', 'keptby', 'comments']

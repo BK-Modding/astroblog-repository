@@ -10,5 +10,10 @@ urlpatterns = [
     path('<int:post_id>/approve/', views.approve, name='approve'),
     path('<int:post_id>/deny/', views.deny, name='deny'),
     path('<int:post_id>/star/', views.star, name='star'),
-    path('<int:post_id>/unstar/', views.unstar, name='unstar')
+    path('<int:post_id>/unstar/', views.unstar, name='unstar'),
+    path('<int:post_id>/keep/', views.keep, name='keep'),
+    path('<int:post_id>/unkeep/', views.unkeep, name='unkeep'),
+    path('user/<int:user_id>/', views.userposts, name='userposts'),
+    path('user/<int:user_id>/keeps/', views.userkeeps, name='userkeeps'),
+    path('category/<str:category>/', views.categoryposts, name='categoryposts')
 ]

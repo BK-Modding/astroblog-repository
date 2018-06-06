@@ -19,21 +19,23 @@
 
 <body>
     <ul id="categories" class="dropdown-content">
-        <li><a href="#!">Neutron stars and Pulsars</a></li>
+        <li><a href="{% url 'categoryposts' category='Stars and Planets' %}">Stars and Planets</a></li>
         <li class="divider"></li>
-        <li><a href="#!">Black holes and Quasars</a></li>
+        <li><a href="{% url 'categoryposts' category='Neutron stars and Pulsars' %}">Neutron stars and Pulsars</a></li>
         <li class="divider"></li>
-        <li><a href="#!">Galaxies and cosmology</a></li>
+        <li><a href="{% url 'categoryposts' category='Black holes and Quasars' %}">Black holes and Quasars</a></li>
         <li class="divider"></li>
-        <li><a href="#!">Relativity in Astro</a></li>
+        <li><a href="{% url 'categoryposts' category='Galaxies and Cosmology' %}">Galaxies and Cosmology</a></li>
         <li class="divider"></li>
-        <li><a href="#!">Particle Physics and Quantum Mechanics in Astro</a></li>
+        <li><a href="{% url 'categoryposts' category='Relativity in Astro' %}">Relativity in Astro</a></li>
         <li class="divider"></li>
-        <li><a href="#!">String Theory in Astro</a></li>
+        <li><a href="{% url 'categoryposts' category='Particle Physics and Quantum Mechanics in Astro' %}">Particle Physics and Quantum Mechanics in Astro</a></li>
         <li class="divider"></li>
-        <li><a href="#!">Astronomy</a></li>
+        <li><a href="{% url 'categoryposts' category='String Theory in Astro' %}">String Theory in Astro</a></li>
         <li class="divider"></li>
-        <li><a href="#!">Scientific Literature</a></li>
+        <li><a href="{% url 'categoryposts' category='Astronomy' %}">Astronomy</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'categoryposts' category='Scientific Literature' %}">Scientific Literature</a></li>
     </ul>
     <nav>
         <div class="nav-wrapper black">
@@ -44,24 +46,26 @@
                 <li><a href="{% url 'latest' %}">Latest posts</a></li>
                 <li><a class="dropdown-trigger" href="" data-target="categories">Categories<i class="material-icons right">arrow_drop_down</i></a></li>
                 <li><a href="{% url 'aboutus' %}">About us</a></li>
-                <li><a href="">Have a query?</a></li>
-                {% if user.is_authenticated %}
-                <li><a href="sass.html">My Posts</a></li>
-                <li><a href="sass.html">My Keeps</a></li>
-                {% block notification_block %}
-                    <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
-                {% endblock %}
-                {% if user.is_staff %}
-                <li><a href="{% url 'approvals' %}">Approvals</a></li>
-                <li><a href="sass.html">Queries</a></li>
+                {% if not user.is_staff %}
+                    <li><a href="{% url 'query' %}">Have a query?</a></li>
                 {% endif %}
-                <li><a class="blue-grey" href="javascript:{document.getElementById('logoutform').submit();}">Log out</a></li>
-                <form id="logoutform" action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" />
-                </form>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'userposts' user.id %}">My Posts</a></li>
+                    <li><a href="{% url 'userkeeps' user.id %}">My Keeps</a></li>
+                    {% block notification_block %}
+                        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+                    {% endblock %}
+                    {% if user.is_staff %}
+                    <li><a href="{% url 'approvals' %}">Approvals</a></li>
+                    <li><a href="{% url 'viewqueries' %}">Queries</a></li>
+                    {% endif %}
+                    <li><a class="blue-grey" href="javascript:{document.getElementById('logoutform').submit();}">Log out</a></li>
+                    <form id="logoutform" action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" />
+                    </form>
                 {% else %}
-                <li><a href="{% url 'signup' %}">Signup/Login</a></li>
+                    <li><a href="{% url 'signup' %}">Signup/Login</a></li>
                 {% endif %}
             </ul>
         </div>
