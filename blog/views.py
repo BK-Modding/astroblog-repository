@@ -74,7 +74,6 @@ def blogpost(request, post_id):
                 starred = True
             if request.user.pk in kept_users:
                 kept = True
-        planeted_comments = post.comments
         return render(request, 'blog/post.html', {'post': post, 'starred': starred, 'kept': kept})
     else:
         if not post.is_approved:

@@ -17,7 +17,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
+{% block bodytag %}
 <body>
+{% endblock %}
     <ul id="categories" class="dropdown-content">
         <li><a href="{% url 'categoryposts' category='Stars and Planets' %}">Stars and Planets</a></li>
         <li class="divider"></li>
@@ -76,16 +78,15 @@
         <div class="container">
             <div class="row">
                 <div class="col l6 s12">
-                    <h5 class="white-text">Footer Content</h5>
-                    <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+                    <h5 class="white-text">Contact us</h5>
+                    <p class="grey-text text-lighten-4">Email us at astroblog.moderation@gmail.com</p>
                 </div>
                 <div class="col l4 offset-l2 s12">
                     <h5 class="white-text">Links</h5>
                     <ul>
-                        <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Facebook</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Instagram</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Twitter</a></li>
                     </ul>
                 </div>
             </div>

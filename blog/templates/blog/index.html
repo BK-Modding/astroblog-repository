@@ -1,4 +1,12 @@
 {% extends 'layout.html' %} 
+{% load staticfiles %}
+{% block bodytag %}
+    <body style="background: url('{% static 'bg.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;" class="white-text">
+{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
