@@ -9,9 +9,8 @@ class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.CASCADE)
     comments = models.ManyToManyField("self", blank=True)
     comment_date_and_time = models.DateTimeField()
-    planets = models.IntegerField(default=1)
+    planets = models.PositiveIntegerField(default=1)
     planetedby = models.ManyToManyField(User, related_name='planeted_by_users')
-    
     
     def __str__(self):
         return self.commenter.username + ': ' + self.comment[:50] + '...'
@@ -38,9 +37,9 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_user') # auto
     image = models.ImageField(upload_to='images/')
     body = HTMLField()
-    totalstars = models.IntegerField(default=1)
+    totalstars = models.PositiveIntegerField(default=1)
     starredby = models.ManyToManyField(User, related_name='starred_by_users', blank=True)
-    totalkeeps = models.IntegerField(default=1)
+    totalkeeps = models.PositiveIntegerField(default=1)
     keptby = models.ManyToManyField(User, related_name='kept_by_users', blank=True)
     comments = models.ManyToManyField(Comment, related_name='comments_by_users', blank=True)
     is_approved = models.BooleanField(default=False)

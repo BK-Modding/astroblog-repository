@@ -28,6 +28,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_social_share',
     'blog.apps.BlogConfig',
     'accounts.apps.AccountsConfig',
     'django.contrib.admin',

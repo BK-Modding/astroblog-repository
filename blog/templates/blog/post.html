@@ -1,6 +1,12 @@
 {% extends 'layout.html' %}
 {% load staticfiles %} 
+{% load social_share %}
 {% block content %}
+    <style type="text/css">
+        .social-facebook {
+            background-image: url('{% static "socialmedia/fb.png" %}');
+        }
+    </style>
     <div class="container">
         {% if not post.is_denied %}
             {% if not post.is_approved %}
@@ -69,29 +75,14 @@
                         {% if not user.username == post.author.username %}
                             {% if not starred %}
                                 <a href="javascript:{document.getElementById('starringform').submit();}" class = "btn blue waves-effect hoverable">Star {{ post.totalstars }}</a>
-                                <form id="starringform" action="{% url 'star' post.id %}" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name=""/>
-                                </form>
+
                             {% else %}
                                 <a href="javascript:{document.getElementById('unstarringform').submit();}" class = "btn green waves-effect hoverable">Starred {{ post.totalstars }}</a>
-                                <form id="unstarringform" action="{% url 'unstar' post.id %}" method="post">
-                                     {% csrf_token %}
-                                    <input type="hidden" name=""/>
-                                </form>
                             {% endif %}
                             {% if not kept %}
                                 <a href="javascript:{document.getElementById('keepingform').submit();}" class = "btn blue waves-effect hoverable">Keep {{ post.totalkeeps }}</a>
-                                <form id="keepingform" action="{% url 'keep' post.id %}" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name=""/>
-                                </form>
                             {% else %}
                                 <a href="javascript:{document.getElementById('unkeepingform').submit();}" class = "btn green waves-effect hoverable">Kept {{ post.totalkeeps }}</a>
-                                <form id="unkeepingform" action="{% url 'unkeep' post.id %}" method="post">
-                                     {% csrf_token %}
-                                    <input type="hidden" name=""/>
-                                </form>
                             {% endif %}
                         {% else %}
                             <a href="" class = "btn purple waves-effect hoverable">Stars {{ post.totalstars }}</a>
@@ -103,22 +94,33 @@
                     {% endif %}
                 </div>
                  <div class="col s6 right-align">
-                     <a href="" class = "btn blue waves-effect hoverable">Share</a>
+                     <span class="flow-text">Share on: </span>
+                     {% post_to_facebook request.get_full_path "Post to facebook" %}
+                     {% post_to_twitter "Astro Post: {{ post.title }}. Check it out!" request.get_full_path "Post to Twitter" %}
+                     {% post_to_gplus request.get_full_path %}
+                     {% post_to_reddit "Astrp Post: {{object.title}}" request.get_full_path %}
+                     {% post_to_linkedin post.title request.get_full_path "Post to LinkedIn" %}
+                     <!-- <a class='dropdown-trigger btn blue waves-effect hoverable' href='' data-target='sharebuttons'>Share</a>
+
+                      <ul id='sharebuttons' class='dropdown-content'>
+                        <li></li>
+                        <li></li>
+                      </ul> -->
+                     
                  </div>
             </div>
             <div class="row">
                 <p class = "flow-text">Comments: </p>
                 <hr>
-                {{ post.comments.length }}
                 {% for comment in post.comments.all %}
                     <span><a href="">{{ comment.commenter }}</a> on {{ comment.comment_date_and_time }}</span>
                     <br>
                     <div class="left-align">
                            {{ comment.comment }} 
                     </div>
-                    <div class="right-align">
+                    <!-- <div class="right-align">
                         <span class="flow-text">{{ comment.planets }}</span> <a class="tooltipped" data-position="top" data-tooltip="Give planet" href=""><img width="2%" height="2%" src="{% static 'planet.png' %}"></a>
-                    </div>
+                    </div> -->
                     <hr>
                 {% empty %}
                     No comments
@@ -131,4 +133,20 @@
         {% endif %}
         </div>
     </div>
+    <form id="starringform" action="{% url 'star' post.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="" />
+    </form>
+    <form id="unstarringform" action="{% url 'unstar' post.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="" />
+    </form>
+     <form id="keepingform" action="{% url 'keep' post.id %}" method="post">
+         {% csrf_token %}
+         <input type="hidden" name="" />
+     </form>
+     <form id="unkeepingform" action="{% url 'unkeep' post.id %}" method="post">
+         {% csrf_token %}
+         <input type="hidden" name="" />
+     </form>
 {% endblock %}

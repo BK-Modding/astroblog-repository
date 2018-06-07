@@ -70,6 +70,7 @@ def blogpost(request, post_id):
         if request.user.is_staff:
             starred_users = Post.objects.values_list('starredby', flat=True).all()
             kept_users = Post.objects.values_list('keptby', flat=True).all()
+            print(starred_users)
             if request.user.pk in starred_users:
                 starred = True
             if request.user.pk in kept_users:
