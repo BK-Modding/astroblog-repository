@@ -201,7 +201,7 @@ def star(request, post_id):
             post.totalstars += 1
             notify_author = Notification()
             notify_author.user_to_notify = post.author
-            notify_author.content = '''<a href="{% url 'userdetails' ''' + request.user.id + ''' %}">''' + request.user.username + '''</a> starred the post "<a href="\posts\\''' + str(post_id) + '''">''' + post.title + '''</a>"''' ################ (This is done lol) USSSSSSSSSSSSERRRRRRRRRRRRRRRR PAGGGGGGGGGGGGGE FOR STARRING NOTIFY
+            notify_author.content = '''<a href="{% url 'userdetails' ''' + str(request.user.id) + ''' %}">''' + request.user.username + '''</a> starred the post "<a href="\posts\\''' + str(post_id) + '''">''' + post.title + '''</a>"''' ################ (This is done lol) USSSSSSSSSSSSERRRRRRRRRRRRRRRR PAGGGGGGGGGGGGGE FOR STARRING NOTIFY
             notify_author.save()
             post.starredby.add(request.user)
             post.save()
@@ -224,7 +224,7 @@ def keep(request, post_id):
         if request.user.username != post.author.username:
             notify_author = Notification()
             notify_author.user_to_notify = post.author
-            notify_author.content = '''<a href="{% url 'userdetails' ''' + request.user.id + ''' %}">''' + request.user.username + '''</a> kept the post "<a href="\posts\\''' + str(post_id) + '''">''' + post.title + '''</a>"''' ################ (This is done lol) USSSSSSSSSSSSERRRRRRRRRRRRRRRR PAGGGGGGGGGGGGGE FOR STARRING NOTIFY
+            notify_author.content = '''<a href="{% url 'userdetails' ''' + str(request.user.id) + ''' %}">''' + request.user.username + '''</a> kept the post "<a href="\posts\\''' + str(post_id) + '''">''' + post.title + '''</a>"''' ################ (This is done lol) USSSSSSSSSSSSERRRRRRRRRRRRRRRR PAGGGGGGGGGGGGGE FOR STARRING NOTIFY
             notify_author.save()
             keep = Keep()
             keep.blog_post = post

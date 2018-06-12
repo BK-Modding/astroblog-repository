@@ -31,42 +31,42 @@
 {% block bodytag %}
 <body>
 {% endblock %}
-    <ul id="categories" class="dropdown-content">
-        <li><a href="{% url 'categoryposts' category='Stars and Planets' %}">Stars and Planets</a></li>
+    <ul id="categories" class="dropdown-content black">
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Stars and Planets' %}">Stars and Planets</a></li>
         <li class="divider"></li>
-        <li><a href="{% url 'categoryposts' category='Neutron stars and Pulsars' %}">Neutron stars and Pulsars</a></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Neutron stars and Pulsars' %}">Neutron stars and Pulsars</a></li>
         <li class="divider"></li>
-        <li><a href="{% url 'categoryposts' category='Black holes and Quasars' %}">Black holes and Quasars</a></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Black holes and Quasars' %}">Black holes and Quasars</a></li>
         <li class="divider"></li>
-        <li><a href="{% url 'categoryposts' category='Galaxies and Cosmology' %}">Galaxies and Cosmology</a></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Galaxies and Cosmology' %}">Galaxies and Cosmology</a></li>
         <li class="divider"></li>
-        <li><a href="{% url 'categoryposts' category='Relativity in Astro' %}">Relativity in Astro</a></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Relativity in Astro' %}">Relativity in Astro</a></li>
         <li class="divider"></li>
-        <li><a href="{% url 'categoryposts' category='Particle Physics and Quantum Mechanics in Astro' %}">Particle Physics and Quantum Mechanics in Astro</a></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Particle Physics and Quantum Mechanics in Astro' %}">Particle Physics and Quantum Mechanics in Astro</a></li>
         <li class="divider"></li>
-        <li><a href="{% url 'categoryposts' category='String Theory in Astro' %}">String Theory in Astro</a></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='String Theory in Astro' %}">String Theory in Astro</a></li>
         <li class="divider"></li>
-        <li><a href="{% url 'categoryposts' category='Astronomy' %}">Astronomy</a></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Astronomy' %}">Astronomy</a></li>
         <li class="divider"></li>
-        <li><a href="{% url 'categoryposts' category='Scientific Literature' %}">Scientific Literature</a></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Scientific Literature' %}">Scientific Literature</a></li>
     </ul>
     {% if user.is_authenticated %}
-        <ul id="profile-options" class="dropdown-content black-text">
-            <li><a href="{% url 'userdetails' user.id %}">Profile page</a></li>
-            <li><a href="{% url 'userposts' user.id %}">My Posts</a></li>
-            <li><a href="{% url 'userkeeps' user.id %}">My Keeps</a></li>
+        <ul id="profile-options" class="dropdown-content black">
+            <li><a class="blue-text text-lighten-2" href="{% url 'userdetails' user.id %}">Profile page</a></li>
+            <li><a class="blue-text text-lighten-2" href="{% url 'userposts' user.id %}">My Posts</a></li>
+            <li><a class="blue-text text-lighten-2" href="{% url 'userkeeps' user.id %}">My Keeps</a></li>
             {% block notification_block %}
                 <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
             {% endblock %} 
             {% if user.is_staff %}
-                <li><a href="{% url 'approvals' %}">Approvals</a></li>
-                <li><a href="{% url 'viewqueries' %}">Queries</a></li>
+                <li><a class="blue-text text-lighten-2" href="{% url 'approvals' %}">Approvals</a></li>
+                <li><a class="blue-text text-lighten-2" href="{% url 'viewqueries' %}">Queries</a></li>
             {% endif %}
         </ul>
     {% endif %}
     <nav>
         <div class="nav-wrapper black">
-            <a href="{% url 'index' %}" class="brand-logo"><img width="20%" height="20%" class="responsive-img" src="{% static 'logo.png' %}"></a>
+            <a href="{% url 'index' %}" class="brand-logo" style="width:20%; height:20%;"><img width="50%" height="50%"  class="responsive-img" src="{% static 'logo.png' %}"></a>
             <ul class="right hide-on-med-and-down">
                  <li><a href="{% url 'newpost' %}"><i class="material-icons">add</i></a></li>
                 <li><a href="{% url 'index' %}">Home</a></li>
@@ -137,7 +137,7 @@
                         © 2018 Astroblog
                     </div>
                     <div class="col s6 right-align">
-                         <> by <a href="">BK-Modding</a>
+                         <> by <a href="https://github.com/BK-Modding">BK-Modding</a> and <a href="https://github.com/popxxisjustaflower">popxxisjustaflower</a>
                     </div>
                 </div>
             </div>
