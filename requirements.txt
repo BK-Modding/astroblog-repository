@@ -1,0 +1,11 @@
+Django==2.0.6
+django-contrib-comments==1.8.0
+django-social-share==1.1.2
+django-threadedcomments==1.2
+django-tinymce==2.7.0
+django-tinymce4-lite==1.7.1
+jsmin==2.2.2
+Pillow==5.1.0
+psycopg2==2.7.4
+psycopg2-binary==2.7.4
+pytz==2018.4
