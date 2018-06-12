@@ -40,7 +40,6 @@ class Post(models.Model):
     totalstars = models.PositiveIntegerField(default=1)
     starredby = models.ManyToManyField(User, related_name='starred_by_users', blank=True)
     totalkeeps = models.PositiveIntegerField(default=1)
-    keptby = models.ManyToManyField(User, related_name='kept_by_users', blank=True)
     comments = models.ManyToManyField(Comment, related_name='comments_by_users', blank=True)
     is_approved = models.BooleanField(default=False)
     is_denied = models.BooleanField(default=False)
@@ -51,4 +50,12 @@ class Post(models.Model):
         return self.title
         
     def summary(self):
-        return self.body[:200]
+        return self.body[:300]
+        
+class Keep(models.Model):
+    blog_post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    keep_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_private = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return self.keep_user.username + "'s keep: " + self.blogpost.title

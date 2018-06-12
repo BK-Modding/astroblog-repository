@@ -1,5 +1,21 @@
 {% extends 'layout.html' %} 
 {% load staticfiles %} 
+{% load formclass %}
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% load staticfiles %}
+{% block bodytag %}
+    <body class="white-text" style="background: url('{% static 'bgs/bg12.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;">
+{% endblock %}
 {% block content %}
 <script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/tinymce/custom.js' %}"></script>
@@ -17,22 +33,23 @@
         {% csrf_token %}
         <div class="input-field">
             <p class="flow-text">Title:</p>
-            {{ form.title }}
+            {{ form.title |addclass:'white-text' }}
         </div>
         <div class="input-field">
             <p class="flow-text">Introduction:</p>
-            {{ form.intro }}
+            {{ form.intro |addclass:'white-text' }}
         </div>
         <div class = "input-field">
             <p class="flow-text">Category:</p>
-            {{ form.category }}
+            {{ form.category |addclass:'white-text' }}
+            
         </div>
         <div class="input-field">
             <p class="flow-text">Blogpost Image:</p>
             <div class="file-field input-field">
                 <div class="btn">
                     <span>Image</span>
-                    {{ form.image }}
+                    {{ form.image|addclass:'white-text' }}
                 </div>
                 <div class="file-path-wrapper">
                     <input class="file-path validate" type="text">

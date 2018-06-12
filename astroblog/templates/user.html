@@ -1,0 +1,341 @@
+{% extends 'layout.html' %} 
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% load staticfiles %}
+{% block bodytag %}
+    <body style="background: url('{% static 'bgs/bg3.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;">
+{% endblock %}
+{% block content %}
+<style type="text/css">
+    .image-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .image {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        transition: .5s ease;
+        background-color: #008CBA;
+    }
+
+    .image-container:hover .overlay {
+        opacity: 1;
+    }
+
+    .text {
+        color: white;
+        font-size: 20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        text-align: center;
+    }
+     .tab a.active {
+         color: rgb(252, 234, 37)!important;
+         background-color: white !important;
+     }
+
+     .tabs .tab a:hover {
+         background-color: #0d47a1 !important;
+         color: #FFFFFF!important;
+     }
+
+     .tabs .tab a {
+         color: #000000 !important;
+         background-color: #f5f5f5 !important;
+     }
+
+     .tabs .indicator {
+         background-color: green !important;
+     }
+
+</style>
+<div class="container">
+    {% if user.id == user_details.id %}
+        <div class="row">
+            <div class="col s12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col s3">
+                                {% if user_profile.profile_photo %}
+                                <a class="modal-trigger" href="#changedpmodal">
+                                    <div class="image-container">
+                                        <img src="{{ user_profile.profile_photo.url }}" alt="Avatar" class="responsive-img circle image">
+                                        <div class="overlay">
+                                            <div class="text">Change</div>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% else %}
+                                <a class="modal-trigger" href="#changedpmodal">
+                                    <div class="image-container">
+                                        <img src="{% static 'socialmedia/dpdefault.png' %}" alt="Avatar" class="responsive-img circle image">
+                                        <div class="overlay">
+                                            <div class="text">Change</div>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endif %}
+                            </div>
+                            <div class="col s8 offset-s1">
+                                <a class="black-text" href="{% url 'userdetails' user_details.id %}">
+                                    <h3>{{ user_details.username }}</h3>
+                                </a>
+                                <hr>
+                                <i><p class="flow-text">{{ user_profile.profile_description }}</p></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s3 offset-s11">
+                                 <a href="#changedescmodal" class="modal-trigger">Change</a>
+                            </div>
+                        </div>
+                         <div class="row">
+                        <div class="col s12">
+                              <ul id="profile_tabs" class="tabs black-text">
+                                  <li class="tab col s6"><a class="active" href="#userposts">Your Posts</a></li>
+                                  <li class="tab col s6"><a href="#userkeeps">Your Keeps</a></li>
+                              </ul>
+                              <div id="userposts" class="col s12">
+                                  {% for post in user_posts %}
+                                      <div class="row">
+                                          <div class="card">
+                                              <div class="card-content">
+                                                 <div class="row">
+                                                     <div class="col s3">
+                                                         <a href="{% url 'blogpost' post.id %}"><img class="responsive-img" src="{{ post.image.url }}"></a>
+                                                     </div>
+                                                     <div class="col s9">
+                                                         <a href="{% url 'blogpost' post.id %}"><p class="flow-text">{{ post.title }}</p></a>
+                                                         <div class="row">
+                                                             <div class="col s6">
+                                                                 <p>On {{ post.dateandtime }}</p>
+                                                             </div>
+                                                             <div class="col s6 right-align">
+                                                                 <em><p>Written under {{ post.category }}</p></em>
+                                                             </div>
+                                                         </div>
+                                                         {{ post.summary | safe }} <a href="{% url 'blogpost' post.id %}">...(read more)</a>
+                                                     </div>
+                                                 </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  {% empty %}
+                                      <p class="flow-text">No posts</p>
+                                  {% endfor %}
+                              </div>
+                              <div id="userkeeps" class="col s12">
+                                  {% for keep in user_keeps %}
+                                      <div class="row">
+                                          <div class="card">
+                                              <div class="card-content">
+                                                 <div class="row">
+                                                     <div class="col s3">
+                                                         <a href="{% url 'blogpost' keep.blog_post.id %}"><img class="responsive-img" src="{{ keep.blog_post.image.url }}"></a>
+                                                     </div>
+                                                     <div class="col s9">
+                                                         <a href="{% url 'blogpost' keep.blog_post.id %}"><p class="flow-text">{{ keep.blog_post.title }}</p></a>
+                                                         <div class="row">
+                                                             <div class="col s6">
+                                                                 <p>Written by {{ keep.blog_post.author }} on {{ keep.blog_post.dateandtime }}</p>
+                                                             </div>
+                                                             <div class="col s6 right-align">
+                                                                 <em><p>Written under {{ keep.blog_post.category }}</p></em>
+                                                             </div>
+                                                         </div>
+                                                         {{ keep.blog_post.summary | safe }} <a href="{% url 'blogpost' keep.blog_post.id %}">...(read more)</a>
+                                                     </div>
+                                                 </div>
+                                                 <div class="row">
+                                                     <div class="col s12 right-align">
+                                                        {% if keep.is_private %}
+                                                            <a href="javascript:{document.getElementById('makekeeppublicform').submit();}" class="btn green waves-effect hoverable tooltipped" data-position="top" data-tooltip="Making this keep public would make it visible to whoever visits your profile">Make keep public</a>
+                                                        {% else %}
+                                                            <a href="javascript:{document.getElementById('makekeepprivateform').submit();}" class="btn purple waves-effect hoverable tooltipped" data-position="top" data-tooltip="Making this keep private would make it visible only to you">Make keep private</a>
+                                                        {% endif %}
+                                                     </div>
+                                                 </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <form id="makekeeppublicform" action="{% url 'makekeeppublic' keep.id %}" method="post">
+                                          {% csrf_token %}
+                                          <input type="hidden" name=""/>
+                                      </form>
+                                      <form id="makekeepprivateform" action="{% url 'makekeepprivate' keep.id %}" method="post">
+                                          {% csrf_token %}
+                                          <input type="hidden" name=""/>
+                                      </form>
+                                  {% empty %}
+                                    <p class="flow-text">No keeps</p>
+                                  {% endfor %}
+                              </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="changedpmodal" class="modal">
+            <div class="modal-content">
+                <p class="flow-text center-align">Change Display Picture</p>
+                <div class="row">
+                    <div class="col s12">
+                         <form id="changedpform" action="{% url 'changedp' user.id %}" method="post" enctype='multipart/form-data'>
+                             {% csrf_token %}
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>New Image</span>
+                                    <input name="image" id="image" type="file">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:{document.getElementById('changedpform').submit();}" class="modal-close waves-effect waves-green btn green">Upload</a>
+            </div>
+        </div>
+        <div id="changedescmodal" class="modal">
+            <div class="modal-content">
+                <p class="flow-text center-align">Change Description</p>
+                <div class="row">
+                    <div class="col s12">
+                         <form id="changedescform" action="{% url 'changedesc' user.id %}" method="post">
+                             {% csrf_token %}
+                             <div class="input-field">
+                                <input name="description" id="description" type="text" class="validate" required>
+                                <label for="description">New description: </label>
+                            </div>
+                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:{document.getElementById('changedescform').submit();}" class="modal-close waves-effect waves-green btn green">Change</a>
+            </div>
+        </div>
+    {% else %}
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s3">
+                            {% if user_profile.profile_photo %}
+                                <img class="responsive-img circle" src="{{ user_profile.profile_photo.url }}"> 
+                            {% else %}
+                                <img class="responsive-img circle" src="{% static 'socialmedia/dpdefault.png' %}"></img>
+                            {% endif %}
+                        </div>
+                        <div class="col s8 offset-s1">
+                            <a class="black-text" href="{% url 'userdetails' user_details.id %}"><h3>{{ user_details.username }}</h3></a>
+                            <hr>
+                            <i><p class="flow-text">{{ user_profile.profile_description }}</p></i>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                              <ul id="profile_tabs" class="tabs black-text">
+                                  <li class="tab col s6"><a href="#userposts">User's Posts</a></li>
+                                  <li class="tab col s6"><a class="active" href="#userkeeps">User's Keeps</a></li>
+                              </ul>
+                              <div id="userposts" class="col s12">
+                                  {% for post in user_posts %}
+                                      <div class="row">
+                                          <div class="card">
+                                              <div class="card-content">
+                                                 <div class="row">
+                                                     <div class="col s3">
+                                                         <a href="{% url 'blogpost' post.id %}"><img class="responsive-img" src="{{ post.image.url }}"></a>
+                                                     </div>
+                                                     <div class="col s9">
+                                                         <a href="{% url 'blogpost' post.id %}"><p class="flow-text">{{ post.title }}</p></a>
+                                                         <div class="row">
+                                                             <div class="col s6">
+                                                                 <p>On {{ post.dateandtime }}</p>
+                                                             </div>
+                                                             <div class="col s6 right-align">
+                                                                 <em><p>Written under {{ post.category }}</p></em>
+                                                             </div>
+                                                         </div>
+                                                         {{ post.summary | safe }} <a href="{% url 'blogpost' post.id %}">...(read more)</a>
+                                                     </div>
+                                                 </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  {% empty %}
+                                      <p class="flow-text">No posts</p>
+                                  {% endfor %}
+                              </div>
+                              <div id="userkeeps" class="col s12">
+                                  {% for keep in user_keeps %}
+                                      {% if not keep.is_private %}
+                                          <div class="row">
+                                              <div class="card">
+                                                  <div class="card-content">
+                                                     <div class="row">
+                                                         <div class="col s3">
+                                                             <a href="{% url 'blogpost' keep.blog_post.id %}"><img class="responsive-img" src="{{ keep.blog_post.image.url }}"></a>
+                                                         </div>
+                                                         <div class="col s9">
+                                                             <a href="{% url 'blogpost' keep.blog_post.id %}"><p class="flow-text">{{ keep.blog_post.title }}</p></a>
+                                                             <div class="row">
+                                                                 <div class="col s6">
+                                                                     <p>Written by {{ keep.blog_post.author }} on {{ keep.blog_post.dateandtime }}</p>
+                                                                 </div>
+                                                                 <div class="col s6 right-align">
+                                                                     <em><p>Written under {{ keep.blog_post.category }}</p></em>
+                                                                 </div>
+                                                             </div>
+                                                             {{ keep.blog_post.summary | safe }} <a href="{% url 'blogpost' keep.blog_post.id %}">...(read more)</a>
+                                                         </div>
+                                                     </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      {% endif %}
+                                  {% empty %}
+                                      <p class="flow-text">No public keeps</p>
+                                  {% endfor %}
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

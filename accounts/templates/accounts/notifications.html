@@ -1,10 +1,29 @@
 {% extends 'layout.html' %}
-
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% load staticfiles %}
+{% block bodytag %}
+    <body style="background: url('{% static 'bgs/bg2.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;">
+{% endblock %}
 {% block content %}
+<style type="text/css">
+    a.dismiss {
+        color: black;
+    }
+</style>
     <div class="container">
         <div class="row">
             <div class="col s12">
-                <h1>Notifications</h1>
+                <h1 class="white-text">Notifications - {{ notifications.count }}</h1>
             </div>
         </div>
         <hr>
@@ -13,11 +32,19 @@
                 <div class="card">
                     <div class="card-content">
                          <p class="flow-text">{{ notify.content | safe }}</p>
+                         <div class="right-align">
+                            <a class="dismiss" href="javascript:{document.getElementById('dismissform').submit();}"><i class="material-icons">cancel</i></a>
+                         </div>
                     </div>
                 </div>
             </div>
+            <form id="dismissform" action="{% url 'dismiss_notification' user_id=request.user.id notify_id=notify.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="" />
+            </form>
         {% empty %}
             <p class="flow-text">No notifications</p>
         {% endfor %}
     </div>
+   
 {% endblock %}

@@ -2,7 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from .models import Notification
+from .models import Notification, UserProfile
+from django.http import HttpResponseRedirect
+
+def get_notify_count(user):
+    usernotifications = None
+    if user.is_authenticated:
+        usernotifications = Notification.objects.filter(user_to_notify=user, dismissed=False).count()
+    
+    return usernotifications
 
 def signup(request):
     if request.user.is_authenticated:
@@ -29,6 +37,9 @@ def signup(request):
                         pass
                     
                     user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'], email=request.POST['email'])
+                    user_profile = UserProfile()
+                    user_profile.user = user
+                    user_profile.save()
                     auth.login(request, user)
                     return redirect('index')
                 else:
@@ -45,7 +56,10 @@ def login(request):
             user = auth.authenticate(username=request.POST['username'], password=request.POST['password'])
             if user is not None:
                 auth.login(request, user)
-                return redirect('index')
+                if request.POST.get('next'):
+                    return HttpResponseRedirect(request.POST.get('next'))
+                else:
+                    return redirect('index')
             else:
                 return render(request, 'accounts/authenticate.html', {'login_error': 'Invalid credentials'})
     
@@ -56,7 +70,22 @@ def logout(request):
 
 @login_required()
 def notifications(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
-    notify_objs = Notification.objects.filter(user_to_notify=user)
-    
-    return render(request, 'accounts/notifications.html', {'notifications': notify_objs})
+    if request.user.id == user_id:
+        user = get_object_or_404(User, pk=user_id)
+        notify_objs = Notification.objects.filter(user_to_notify=request.user, dismissed=False)
+        
+        return render(request, 'accounts/notifications.html', {'notifications': notify_objs, 'notification_count': get_notify_count(request.user)})
+    else:
+        return redirect('unauthorized')
+
+@login_required
+def dismiss_notification(request, user_id, notify_id):
+    if request.method == 'POST':
+        if request.user.id == user_id:
+            notification = get_object_or_404(Notification, pk=notify_id)
+            notification.dismissed = True
+            notification.save()
+            notifications = Notification.objects.filter(user_to_notify=request.user, dismissed=False)
+            return render(request, 'accounts/notifications.html', {'notifications': notifications, 'notification_count': get_notify_count(request.user)})
+        else:
+            return redirect('unauthorized')

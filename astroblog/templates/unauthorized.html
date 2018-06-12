@@ -1,15 +1,21 @@
 {% extends 'layout.html' %}
 {% load staticfiles %}
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% block bodytag %}
+    <body class="white-text" style="background: url('{% static 'bgs/forbiddenbg.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;">
+{% endblock %}
 {% block content %}
-    <style type="text/css">
-        .text {
-            position: absolute;
-            top: 5%;
-            left: 1%;
-        }
-    </style>
-    <div class="text white-text">
-        <h1>403 Forbidden!</h1>
-    </div>
-    <img src="{% static 'forbiddenbg.jpg' %}" style="width: 100%;" height='100%'>
+<div class="container">
+    <h1>403 Forbidden!</h1>
+</div>
 {% endblock %}

@@ -1,4 +1,19 @@
 {% extends 'layout.html' %} 
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% load staticfiles %}
+{% block bodytag %}
+    <body style="background: url('{% static 'bgs/bg8.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;">
+{% endblock %}
 {% block content %}
 <div class="container">
     {% if query_response %}
@@ -25,7 +40,7 @@
     {% endif %}
     <div class="row">
         <div class="col s12">
-            <h2>All queries</h2>
+            <h2><a href="{% url 'viewqueries' %}">All queries - {{ queries.count }}</a></h2>
         </div>
     </div>
     <hr> 
@@ -50,7 +65,11 @@
                             Answered: {{ query.is_answered }}
                         </div>
                         <div class="col s8 right-align">
-                            <a href="#replymodal" class="btn blue waves-effect hoverable modal-trigger">Reply to query</a>
+                            {% if not query.is_answered %}
+                                <a href="#replymodal" class="btn blue waves-effect hoverable modal-trigger">Reply to query</a>
+                            {% else %}
+                                <a href="" class="btn green waves-effect hoverable modal-trigger">Replied</a>
+                            {% endif %}
                             <a href="#deletemodal" class="btn red waves-effect hoverable modal-trigger">Delete query</a>
                         </div>
                     </div>
@@ -95,8 +114,9 @@
                 </div>
             </div>
         </div>
+    </div>
         {% empty %}
         <p class="flow-text">No queries</p>
         {% endfor %}
-    </div>
-    {% endblock %}
+</div>
+{% endblock %}

@@ -15,6 +15,17 @@
     <meta name="keywords" content="HTML,CSS,XML,JavaScript">
     <meta name="author" content="John Doe">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1 0 auto;
+        }
+    </style>
 </head>
 
 {% block bodytag %}
@@ -39,9 +50,23 @@
         <li class="divider"></li>
         <li><a href="{% url 'categoryposts' category='Scientific Literature' %}">Scientific Literature</a></li>
     </ul>
+    {% if user.is_authenticated %}
+        <ul id="profile-options" class="dropdown-content black-text">
+            <li><a href="{% url 'userdetails' user.id %}">Profile page</a></li>
+            <li><a href="{% url 'userposts' user.id %}">My Posts</a></li>
+            <li><a href="{% url 'userkeeps' user.id %}">My Keeps</a></li>
+            {% block notification_block %}
+                <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+            {% endblock %} 
+            {% if user.is_staff %}
+                <li><a href="{% url 'approvals' %}">Approvals</a></li>
+                <li><a href="{% url 'viewqueries' %}">Queries</a></li>
+            {% endif %}
+        </ul>
+    {% endif %}
     <nav>
         <div class="nav-wrapper black">
-            <a href="{% url 'index' %}" class="brand-logo">Astroblog</a>
+            <a href="{% url 'index' %}" class="brand-logo"><img width="20%" height="20%" class="responsive-img" src="{% static 'logo.png' %}"></a>
             <ul class="right hide-on-med-and-down">
                  <li><a href="{% url 'newpost' %}"><i class="material-icons">add</i></a></li>
                 <li><a href="{% url 'index' %}">Home</a></li>
@@ -52,16 +77,8 @@
                     <li><a href="{% url 'query' %}">Have a query?</a></li>
                 {% endif %}
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'userposts' user.id %}">My Posts</a></li>
-                    <li><a href="{% url 'userkeeps' user.id %}">My Keeps</a></li>
-                    {% block notification_block %}
-                        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
-                    {% endblock %}
-                    {% if user.is_staff %}
-                    <li><a href="{% url 'approvals' %}">Approvals</a></li>
-                    <li><a href="{% url 'viewqueries' %}">Queries</a></li>
-                    {% endif %}
-                    <li><a class="blue-grey" href="javascript:{document.getElementById('logoutform').submit();}">Log out</a></li>
+                    <li><a class="dropdown-trigger" href="#profile-options">My profile<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a class="btn blue darken-1" href="javascript:{document.getElementById('logoutform').submit();}">Log out</a></li>
                     <form id="logoutform" action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" />
@@ -70,8 +87,30 @@
                     <li><a href="{% url 'signup' %}">Signup/Login</a></li>
                 {% endif %}
             </ul>
+            <div class="hide-on-large-only">
+                <a href="#" data-target="slide-out" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
+            </div>
         </div>
     </nav>
+    <ul id="slide-out" class="sidenav">
+      <li><a href="#!">First Sidebar Link</a></li>
+      <li><a href="#!">Second Sidebar Link</a></li>
+      <li class="no-padding">
+        <ul class="collapsible collapsible-accordion">
+          <li>
+            <a class="collapsible-header">Dropdown<i class="material-icons">arrow_drop_down</i></a>
+            <div class="collapsible-body">
+              <ul>
+                <li><a href="#!">First</a></li>
+                <li><a href="#!">Second</a></li>
+                <li><a href="#!">Third</a></li>
+                <li><a href="#!">Fourth</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
     {% block content %} {% endblock %}
 
     <footer class="page-footer black">
@@ -82,7 +121,7 @@
                     <p class="grey-text text-lighten-4">Email us at astroblog.moderation@gmail.com</p>
                 </div>
                 <div class="col l4 offset-l2 s12">
-                    <h5 class="white-text">Links</h5>
+                    <h5 class="white-text">Find us</h5>
                     <ul>
                         <li><a class="grey-text text-lighten-3" href="#!">Facebook</a></li>
                         <li><a class="grey-text text-lighten-3" href="#!">Instagram</a></li>
@@ -93,8 +132,14 @@
         </div>
         <div class="footer-copyright">
             <div class="container">
-                © 2014 Copyright Text
-                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+                <div class="row">
+                    <div class="col s6">
+                        © 2018 Astroblog
+                    </div>
+                    <div class="col s6 right-align">
+                         <> by <a href="">BK-Modding</a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
