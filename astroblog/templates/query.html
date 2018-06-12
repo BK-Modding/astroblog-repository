@@ -1,5 +1,19 @@
 {% extends 'layout.html' %} 
 {% load staticfiles %} 
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% block bodytag %}
+    <body style="background: url('{% static 'bgs/bgtest3.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;" class="white-text">
+{% endblock %}
 {% block content %}
 
 <div class="container">
@@ -15,16 +29,16 @@
         {% csrf_token %}
         <div class="input-field">
             <p class="flow-text">Your Name:</p>
-            <input type="text" name="name">
+            <input type="text" class="white-text" name="name">
         </div>
         <div class="input-field">
             <p class="flow-text">Email address:</p>
-            <input placeholder="Enter your email here" name="email" id="email" type="email" class="validate">
+            <input class="white-text" placeholder="Enter your email here" name="email" id="email" type="email" class="validate">
             <span class="helper-text" data-error="Invalid email address" data-success="Valid">Enter a valid email: example@website.com</span>
         </div>
         <div class = "input-field">
             <p class="flow-text">Your Query:</p>
-            <textarea id="querybody" class="materialize-textarea" name="querybody"></textarea>
+            <textarea id="querybody" class="materialize-textarea white-text" name="querybody"></textarea>
         </div>
         {{ form.errors }}
         {{ form.non_field_errors }}

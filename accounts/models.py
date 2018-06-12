@@ -5,10 +5,19 @@ from django.contrib.auth.models import User
 class Notification(models.Model):
     user_to_notify = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
+    dismissed = models.BooleanField(default=False)
     
     
     def __str__(self):
-        return self.user_to_notify.username + "'s notification"
+        return self.user_to_notify.username + "'s notification: " + self.content[:50]
+        
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile_photo = models.ImageField(upload_to='images/profiles', blank=True)
+    profile_description = models.TextField(default='Another Stargazer!')
+    
+    def __str__(self):  
+        return "%s's profile" % self.user  
         
 class Query(models.Model):
     name = models.TextField()
@@ -21,3 +30,6 @@ class Query(models.Model):
     
     def __str__(self):
         return self.name
+        
+    def date_and_time_pretty(self):
+        return self.date_and_time_of_submission.strftime('%I:%M %p, %b %e, %Y')

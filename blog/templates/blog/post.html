@@ -1,6 +1,20 @@
 {% extends 'layout.html' %}
 {% load staticfiles %} 
 {% load social_share %}
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% block bodytag %}
+    <body style="background: url('{% static 'bgs/bg.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;" class="white-text">
+{% endblock %}
 {% block content %}
     <style type="text/css">
         .social-facebook {
@@ -43,7 +57,7 @@
                 <p class = "flow-text">{{ post.dateandtime }}</p>
             </div>
             <div class="col s4 offset-s4 right-align">
-                <p class = "flow-text">By {{ post.author.username }}</p>
+                <p class = "flow-text">By <a href="{% url 'userdetails' post.author.id %}">{{ post.author.username }}</a></p>
             </div>
         </div>
         <div class="row">
@@ -80,13 +94,22 @@
                                 <a href="javascript:{document.getElementById('unstarringform').submit();}" class = "btn green waves-effect hoverable">Starred {{ post.totalstars }}</a>
                             {% endif %}
                             {% if not kept %}
-                                <a href="javascript:{document.getElementById('keepingform').submit();}" class = "btn blue waves-effect hoverable">Keep {{ post.totalkeeps }}</a>
+                                <a href="javascript:{document.getElementById('keepingform').submit();}" class = "btn blue waves-effect hoverable">Keep 
+                                {% if keeps_count %}
+                                    {{ keeps_count }}
+                                {% endif %}
+                                </a>
                             {% else %}
-                                <a href="javascript:{document.getElementById('unkeepingform').submit();}" class = "btn green waves-effect hoverable">Kept {{ post.totalkeeps }}</a>
+                                <a href="javascript:{document.getElementById('unkeepingform').submit();}" class = "btn green waves-effect hoverable">Kept 
+                                {% if keeps_count %}
+                                    {{ keeps_count }}
+                                {% endif %}
+                                </a>
                             {% endif %}
                         {% else %}
                             <a href="" class = "btn purple waves-effect hoverable">Stars {{ post.totalstars }}</a>
                             <a href="" class = "btn blue waves-effect hoverable">Keeps {{ post.totalkeeps }}</a>
+                            <a href="#deleteconfirmmodal" class= "btn red waves-effect hoverable modal-trigger">Delete Post</a>
                         {% endif %}
                     {% else %}
                         <a href="{% url 'login' %}" class = "btn purple waves-effect hoverable">Stars {{ post.totalstars }}</a>
@@ -118,10 +141,17 @@
                     <div class="left-align">
                            {{ comment.comment }} 
                     </div>
-                    <!-- <div class="right-align">
-                        <span class="flow-text">{{ comment.planets }}</span> <a class="tooltipped" data-position="top" data-tooltip="Give planet" href=""><img width="2%" height="2%" src="{% static 'planet.png' %}"></a>
-                    </div> -->
+                    <div class="right-align">
+                       <!--  <span class="flow-text">{{ comment.planets }}</span> <a class="tooltipped" data-position="top" data-tooltip="Give planet" href=""><img width="2%" height="2%" src="{% static 'planet.png' %}"></a> -->
+                       {% if comment.commenter.id == request.user.id %}
+                           <a href="javascript:{document.getElementById('deletecommentform').submit();}" class="btn red waves-effect hoverable">Delete Comment</a>
+                       {% endif %}
+                    </div>
                     <hr>
+                    <form id="deletecommentform" method="post" action="{% url 'deletecomment' comment_id=comment.id post_id=post.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="" />
+                    </form>
                 {% empty %}
                     No comments
                 {% endfor %}
@@ -131,6 +161,17 @@
                 </form>
                 <a href="javascript:{document.getElementById('commentform').submit();}" class = "btn purple waves-effect hoverable">Comment</a>
         {% endif %}
+        </div>
+    </div>
+    <div id="deleteconfirmmodal" class="modal">
+        <div class="modal-content">
+            <p class="flow-text">Warning: Are you sure you want to delete this POST???</p>
+            <br>
+            <em>This is worse than falling into a supermassive black hole.......</em>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:{document.getElementById('deleteform').submit();}" class="modal-close waves-effect waves-red red btn-flat white-text">YESSSS</a>
+            <a href="" class="modal-close waves-effect waves-green green btn-flat white-text">NOOOOOOO</a>
         </div>
     </div>
     <form id="starringform" action="{% url 'star' post.id %}" method="post">
@@ -146,6 +187,10 @@
          <input type="hidden" name="" />
      </form>
      <form id="unkeepingform" action="{% url 'unkeep' post.id %}" method="post">
+         {% csrf_token %}
+         <input type="hidden" name="" />
+     </form>
+     <form id="deleteform" action="{% url 'delete' post.id %}" method="post">
          {% csrf_token %}
          <input type="hidden" name="" />
      </form>

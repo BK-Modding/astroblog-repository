@@ -1,16 +1,33 @@
 {% extends 'layout.html' %} 
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% load staticfiles %}
+{% block bodytag %}
+    <body class="white-text" style="background: url('{% static 'bgs/bg6.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;">
+{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col s12">
-            <h1>{{ user }}'s posts</h1>
+            <h1><a href="{% url 'userdetails' user.id %}">{{ user }}</a>'s posts - {{ posts.count }}</h1>
         </div>
     </div>
     <hr>
     {% for post in posts %}
     <div class="row">
         <div class="col s12">
-            <h4>{{ post.title }}</h4>
+            <a href="{% url 'blogpost' post.id %}">
+                <h4>{{ post.title }}</h4>
+            </a>
         </div>
     </div>
     <div class="row">

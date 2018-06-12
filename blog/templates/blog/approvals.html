@@ -1,5 +1,19 @@
 {% extends 'layout.html' %}
-
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% load staticfiles %}
+{% block bodytag %}
+    <body class="white-text" style="background: url('{% static 'bgs/bg4.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;">
+{% endblock %}
 {% block content %}
     <div class="container">
         {% if approved_post %}
@@ -7,7 +21,7 @@
                 <div class="col s12">
                     <div class="card green white-text">
                         <div class="card-content flow-text">
-                            You have approved the post '{{ approved_post.title }}' by author {{ approved_post.author.username }}
+                            You have approved the post '{{ approved_post.title }}' by author <a href="{% url 'userdetails' approved_post.author.id %}">{{ approved_post.author.username }}</a>
                         </div>
                     </div>
                 </div>
@@ -18,7 +32,7 @@
                 <div class="col s12">
                     <div class="card red white-text">
                         <div class="card-content flow-text">
-                            You have denied the post '{{ denied_post.title }}' by author {{ denied_post.author.username }}
+                            You have denied the post '{{ denied_post.title }}' by author <a href="{% url 'userdetails' denied_post.author.id %}">{{ denied_post.author.username }}</a>
                         </div>
                     </div>
                 </div>
@@ -29,7 +43,7 @@
                 <div class="col s12">
                     <div class="card red white-text">
                         <div class="card-content flow-text">
-                            Couldn't deny the post '{{ denied_post.title }}' by {{ denied_post.author.username }} because no moderation comments were provided
+                            Couldn't deny the post '{{ denied_post.title }}' by <a href="{% url 'userdetails' denied_post.author.id %}">{{ denied_post.author.username }}</a> because no moderation comments were provided
                         </div>
                     </div>
                 </div>
@@ -37,7 +51,7 @@
         {% endif %}
         <div class="row">
             <div class="col s12">
-                <h1>Pending approvals</h1>
+                <h1>Pending approvals - {{ posts.count }}</h1>
             </div>
         </div>
         <hr>
@@ -52,7 +66,7 @@
                     <h6>{{ post.dateandtime }}</h6>
                 </div>
                 <div class="col s8 right-align">
-                    <h6>Written by {{ post.author.username }}</h6>
+                    <h6>Written by <a href="{% url 'userdetails' post.author.id %}">{{ post.author.username }}</a></h6>
                 </div>
             </div>
             <div class="row">
@@ -92,7 +106,7 @@
             </div>
             <hr>
         {% empty %}
-            <p class="flow-text">No posts</p>
+            <p class="flow-text">No approvals</p>
         {% endfor %}
     </div>
 {% endblock %}

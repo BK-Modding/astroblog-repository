@@ -1,4 +1,19 @@
 {% extends 'layout.html' %} 
+{% load staticfiles %}
+{% block notification_block %}
+    {% if notification_count %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %}
+{% block bodytag %}
+    <body style="background: url('{% static 'bgs/bg9.jpg' %}') no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;" class="white-text">
+{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
@@ -20,7 +35,7 @@
             <h6>{{ post.dateandtime }}</h6>
         </div>
         <div class="col s8 right-align">
-            <h6>Written by {{ post.author.username }}</h6>
+            <h6>Written by <a href="{% url 'userdetails' post.author.id %}">{{ post.author.username }}</a></h6>
         </div>
     </div>
     <div class="row">
