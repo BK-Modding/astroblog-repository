@@ -95,10 +95,7 @@ def login(request):
 
 def activate(request, uidb64, token):
     try:
-        print(uidb64)
-        print(token)
         uid = urlsafe_base64_decode(uidb64).decode()
-        print("uid: {}",format(uid))
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
