@@ -4,4 +4,9 @@ $(document).ready(function() {
         constrainWidth: false,
         coverTrigger: false
     });
+    $('.sidenav').sidenav({
+        edge: 'right',
+        draggable: true,
+        preventScrolling: false
+    });
 });
