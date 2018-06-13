@@ -8,6 +8,13 @@
         <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
     {% endif %}
 {% endblock %}
+{% block mobile_notification_block %}
+    {% if notification_count %}
+        <li><a class="teal-text" href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a class="teal-text" href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %} 
 {% block bodytag %}
     <body style="background: url('{% static 'bgs/bg.jpg' %}') no-repeat center center fixed;
                  -webkit-background-size: cover;
@@ -57,7 +64,7 @@
                 <p class = "flow-text">{{ post.dateandtime }}</p>
             </div>
             <div class="col s4 offset-s4 right-align">
-                <p class = "flow-text">By <a href="{% url 'userdetails' post.author.id %}">{{ post.author.username }}</a></p>
+                <p class = "flow-text">By <a href="{% url 'userdetails' post.author.id %}">{{ post.author.username }} <img class="responsive-img circle" width="50vw" height="50vh" src="{{ author_profile.profile_photo.url }}"></a> </p>
             </div>
         </div>
         <div class="row">

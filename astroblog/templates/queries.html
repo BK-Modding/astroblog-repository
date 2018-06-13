@@ -6,6 +6,13 @@
         <li><a href="{% url 'notifications' user.id %}">Notifications</a></li>
     {% endif %}
 {% endblock %}
+{% block mobile_notification_block %}
+    {% if notification_count %}
+        <li><a class="teal-text" href="{% url 'notifications' user.id %}">Notifications <span class="red-text">{{ notification_count }}</span></a></li>
+    {% else %}
+        <li><a class="teal-text" href="{% url 'notifications' user.id %}">Notifications</a></li>
+    {% endif %}
+{% endblock %} 
 {% load staticfiles %}
 {% block bodytag %}
     <body8 style="background: url('{% static 'bgs/bg15.jpg' %}') no-repeat center center fixed;

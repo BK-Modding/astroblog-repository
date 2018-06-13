@@ -4,16 +4,17 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel='shortcut icon' type='image/x-icon' href="{% static 'favicon.ico' %}" />
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
 
-    <title>Astro blog - the blog for people who look up into the cosmos</title>
+    <title>Astro blog - The blog for people who look up into the cosmos</title>
 
-    <meta name="description" content="">
-    <meta name="keywords" content="HTML,CSS,XML,JavaScript">
-    <meta name="author" content="John Doe">
+    <meta name="description" content="The blog for people who look up into the cosmos, and wonder about our place in this Universe. We encourage writers of any level to come here and write their hearts out regarding anything that stars with astro-">
+    <meta name="keywords" content="Astroblog,Astro,Blog,Astrophysics,Astronomy,Science,Cosmology,Space Blog,Space,Galaxies,Cosmos,Universe,Stars">
+    <meta name="author" content="BK Modding">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style type="text/css">
         body {
@@ -50,6 +51,26 @@
         <li class="divider"></li>
         <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Scientific Literature' %}">Scientific Literature</a></li>
     </ul>
+    <ul id="mobile-categories" class="dropdown-content black">
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Stars and Planets' %}">Stars and Planets</a></li>
+        <li class="divider"></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Neutron stars and Pulsars' %}">Neutron stars and Pulsars</a></li>
+        <li class="divider"></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Black holes and Quasars' %}">Black holes and Quasars</a></li>
+        <li class="divider"></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Galaxies and Cosmology' %}">Galaxies and Cosmology</a></li>
+        <li class="divider"></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Relativity in Astro' %}">Relativity in Astro</a></li>
+        <li class="divider"></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Particle Physics and Quantum Mechanics in Astro' %}">Particle Physics and QM in Astro</a></li>
+        <li class="divider"></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='String Theory in Astro' %}">String Theory in Astro</a></li>
+        <li class="divider"></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Astronomy' %}">Astronomy</a></li>
+        <li class="divider"></li>
+        <li><a class="blue-text text-lighten-2" href="{% url 'categoryposts' category='Scientific Literature' %}">Scientific Literature</a></li>
+    </ul>
+
     {% if user.is_authenticated %}
         <ul id="profile-options" class="dropdown-content black">
             <li><a class="blue-text text-lighten-2" href="{% url 'userdetails' user.id %}">Profile page</a></li>
@@ -63,10 +84,22 @@
                 <li><a class="blue-text text-lighten-2" href="{% url 'viewqueries' %}">Queries</a></li>
             {% endif %}
         </ul>
+        <ul id="mobile-profile-options" class="dropdown-content black">
+            <li><a class="blue-text text-lighten-2" href="{% url 'userdetails' user.id %}">Profile page</a></li>
+            <li><a class="blue-text text-lighten-2" href="{% url 'userposts' user.id %}">My Posts</a></li>
+            <li><a class="blue-text text-lighten-2" href="{% url 'userkeeps' user.id %}">My Keeps</a></li>
+            {% block mobile_notification_block %}
+                <li><a class="teal-text" href="{% url 'notifications' user.id %}">Notifications</a></li>
+            {% endblock %} 
+            {% if user.is_staff %}
+                <li><a class="blue-text text-lighten-2" href="{% url 'approvals' %}">Approvals</a></li>
+                <li><a class="blue-text text-lighten-2" href="{% url 'viewqueries' %}">Queries</a></li>
+            {% endif %}
+        </ul>
     {% endif %}
     <nav>
         <div class="nav-wrapper black">
-            <a href="{% url 'index' %}" class="brand-logo" style="width:20%; height:20%;"><img width="50%" height="50%"  class="responsive-img" src="{% static 'logo.png' %}"></a>
+            <a href="{% url 'index' %}" class="brand-logo" style="width:20%; height:20%;"><img width="120vh" height="120vh"  class="responsive-img" src="{% static 'logo.png' %}"></a>
             <ul class="right hide-on-med-and-down">
                  <li><a href="{% url 'newpost' %}"><i class="material-icons">add</i></a></li>
                 <li><a href="{% url 'index' %}">Home</a></li>
@@ -92,25 +125,28 @@
             </div>
         </div>
     </nav>
-    <ul id="slide-out" class="sidenav">
-      <li><a href="#!">First Sidebar Link</a></li>
-      <li><a href="#!">Second Sidebar Link</a></li>
-      <li class="no-padding">
-        <ul class="collapsible collapsible-accordion">
-          <li>
-            <a class="collapsible-header">Dropdown<i class="material-icons">arrow_drop_down</i></a>
-            <div class="collapsible-body">
-              <ul>
-                <li><a href="#!">First</a></li>
-                <li><a href="#!">Second</a></li>
-                <li><a href="#!">Third</a></li>
-                <li><a href="#!">Fourth</a></li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </li>
+
+    <ul id="slide-out" class="sidenav black">
+        <li><a class="white-text" href="{% url 'newpost' %}">New post</a></li>
+        <li><a class="white-text" href="{% url 'index' %}">Home</a></li>
+        <li><a class="white-text" href="{% url 'latest' %}">Latest posts</a></li>
+        <li><a class="dropdown-trigger white-text" href="" data-target="mobile-categories">Categories<i class="material-icons right">arrow_drop_down</i></a></li>
+        <li><a class="white-text" href="{% url 'aboutus' %}">About us</a></li>
+        {% if not user.is_staff %}
+            <li><a class="white-text" href="{% url 'query' %}">Have a query?</a></li>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <li><a class="dropdown-trigger white-text" href="#mobile-profile-options">My profile<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a class="btn blue darken-1" href="javascript:{document.getElementById('logoutform').submit();}">Log out</a></li>
+            <form id="logoutform" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" />
+            </form>
+        {% else %}
+            <li><a class="white-text" href="{% url 'signup' %}">Signup/Login</a></li>
+        {% endif %}
     </ul>
+    
     {% block content %} {% endblock %}
 
     <footer class="page-footer black">

@@ -87,7 +87,8 @@ def blogpost(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     if not request.user.is_authenticated:
         keeps_count = Keep.objects.filter(blog_post=post).count()
-        return render(request, 'blog/post.html', {'post': post, 'keeps_count': keeps_count})
+        author_profile = get_object_or_404(UserProfile, user=post.author)
+        return render(request, 'blog/post.html', {'post': post, 'keeps_count': keeps_count, 'author_profile': author_profile})
     else:
         if post.author.username == request.user.username or request.user.is_staff:
             starred = False
@@ -100,7 +101,8 @@ def blogpost(request, post_id):
                 if kept_user:
                     kept = True
             keeps_count = Keep.objects.filter(blog_post=post).count()
-            return render(request, 'blog/post.html', {'post': post, 'starred': starred, 'kept': kept, 'keeps_count': keeps_count, 'notification_count': get_notify_count(request.user)})
+            author_profile = get_object_or_404(UserProfile, user=post.author)
+            return render(request, 'blog/post.html', {'post': post, 'starred': starred, 'kept': kept, 'keeps_count': keeps_count, 'author_profile': author_profile, 'notification_count': get_notify_count(request.user)})
         else:
             if not post.is_approved:
                 return redirect('index')
@@ -114,7 +116,8 @@ def blogpost(request, post_id):
                 if kept_user:
                     kept = True
                 keeps_count = Keep.objects.filter(blog_post=post).count()
-                return render(request, 'blog/post.html', {'post': post, 'starred': starred, 'kept': kept, 'keeps_count': keeps_count, 'notification_count': get_notify_count(request.user)})
+                author_profile = get_object_or_404(UserProfile, user=post.author)
+                return render(request, 'blog/post.html', {'post': post, 'starred': starred, 'kept': kept, 'keeps_count': keeps_count, 'author_profile': author_profile, 'notification_count': get_notify_count(request.user)})
 
 @login_required   
 def comment(request, post_id):
