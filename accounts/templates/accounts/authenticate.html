@@ -41,6 +41,13 @@
                 </div>
             </div>
             {% endif %}
+            {% if signup_success %}
+            <div class="card">
+                <div class="card-content center-align green white-text">
+                    {{ signup_success }}
+                </div>
+            </div>
+            {% endif %}
             <h3>Signup</h3>
             <form id="signupform" method="post" action="{% url 'signup' %}">
                 {% csrf_token %}

@@ -3,7 +3,19 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from .models import Notification, UserProfile
-from django.http import HttpResponseRedirect
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponseRedirect, HttpResponse
+from django.utils.encoding import force_bytes, force_text
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import send_mail
+try:
+    from astroblog import local_settings
+except ImportError:
+    print("import error")
+    pass
+
 
 def get_notify_count(user):
     usernotifications = None
@@ -37,11 +49,26 @@ def signup(request):
                         pass
                     
                     user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'], email=request.POST['email'])
+                    user.is_active = False
+                    user.save()
                     user_profile = UserProfile()
                     user_profile.user = user
                     user_profile.save()
-                    auth.login(request, user)
-                    return redirect('index')
+                    current_site = get_current_site(request)
+                    mail_subject = 'Activate your Astroblog account.'
+                    message = render_to_string('accounts/acc_active_email.html', {
+                        'user': user,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                        'token': account_activation_token.make_token(user),
+                    })
+                    to_email = request.POST['email']
+                    from_email = local_settings.DEFAULT_FROM_EMAIL
+                    recipient_list = [to_email, 'kavesbteja@gmail.com']
+                    send_mail(mail_subject, '', from_email, recipient_list, fail_silently=False,
+                              html_message=message)
+
+                    return render(request, 'accounts/authenticate.html', {'signup_success': 'Your account has been successfully created, please verify it as an email has been sent to the registered email address'})
                 else:
                     return render(request, 'accounts/authenticate.html', {'signup_error': 'The passwords do not match'})
             else:
@@ -55,13 +82,30 @@ def login(request):
         elif request.method == 'POST':
             user = auth.authenticate(username=request.POST['username'], password=request.POST['password'])
             if user is not None:
-                auth.login(request, user)
-                if request.POST.get('next'):
-                    return HttpResponseRedirect(request.POST.get('next'))
+                if user.is_active:
+                    auth.login(request, user)
+                    if request.POST.get('next'):
+                        return HttpResponseRedirect(request.POST.get('next'))
+                    else:
+                        return redirect('index')
                 else:
-                    return redirect('index')
+                    return render(request, 'accounts/authenticate.html', {'login_error': 'This account has not yet been verified, please verify it before logging in'})
             else:
-                return render(request, 'accounts/authenticate.html', {'login_error': 'Invalid credentials'})
+                return render(request, 'accounts/authenticate.html', {'login_error': 'Invalid credentials or this account has not yet been verified, please verify it before logging in'})
+
+def activate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        # return redirect('home')
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
     
 def logout(request):
     if request.method == 'POST':
