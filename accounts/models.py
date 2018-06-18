@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 class Notification(models.Model):
     user_to_notify = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
-    dismissed = models.BooleanField(default=False)
     
     
     def __str__(self):

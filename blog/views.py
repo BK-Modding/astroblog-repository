@@ -6,23 +6,11 @@ from django.utils import timezone
 from .models import Post, Comment, Keep
 from .forms import PostForm
 from accounts.models import Notification, UserProfile
-
-'''category_dict = {
-        'Stars and Planets': 'STARS&PLANETS',
-        'Neutron stars and Pulsars': 'PULSARS',
-        'Black holes and Quasars': 'QUASARS',
-        'Galaxies and Cosmology': 'GALAXIES&COSMOLOGY',
-        'Relativity in Astro' : 'RELATIVITY',
-        'Particle Physics and Quantum Mechanics in Astro': 'PARTICLE&QM',
-        'String Theory in Astro': 'STRINGTHEORY',
-        'Astronomy': 'ASTRONOMY',
-        'Scientific Literature': 'SCIENTIFIC_LITERATURE'
-    }'''
     
 def get_notify_count(user):
     usernotifications = None
     if user.is_authenticated:
-        usernotifications = Notification.objects.filter(user_to_notify=user, dismissed=False).count()
+        usernotifications = Notification.objects.filter(user_to_notify=user).count()
     
     return usernotifications
 
@@ -56,18 +44,27 @@ def newpost(request):
             return render(request, 'blog/newpost.html', {'post_error': 'Error, Some fields have not been filled', 'form': form, 'notification_count': get_notify_count(request.user)})
 
 
-
-'''if request.POST['title'] and request.POST['intro'] and request.FILES['image'] and request.POST['body']:
-            post = Post()
-            post.title = request.POST['title']
-            post.dateandtime = timezone.datetime.now()
-            post.intro = request.POST['intro']
-            post.author = request.user
-            post.body = request.POST['body']
-            post.image = request.FILES['image']
+@login_required
+def modifypost(request, post_id):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=post_id)
+        if request.user.id == post.author.id:
+            form = PostForm(request.POST, request.FILES)
+            if form.data['title'] and form.data['intro'] and form.data['category'] and form.data['body']:
+                post.title = form.data['title']
+                post.intro = form.data['intro']
+                post.category = form.data['category']
+                post.body = form.data['body']
+                if request.FILES.get('image', False):
+                    post.image = request.FILES['image']
+                post.save()
+                return redirect('blogpost', post_id=post.id)
+            else:
+                return render(request, 'blog/post.html',
+                              {'post': post, 'modify_error': 'Error, The post could not be changed as some fields have not been filled', 'form': form,
+                               'notification_count': get_notify_count(request.user)})
         else:
-            return render(request, 'blog/newpost.html', {'post_error': 'Error, Some fields have not been filled', 'form': form})
-'''
+            return redirect('unauthorized')
 
 @login_required
 def delete(request, post_id):
@@ -82,7 +79,8 @@ def delete(request, post_id):
              return redirect('index')
         else:
             return redirect('unauthorized')
-            
+
+
 def blogpost(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     if not request.user.is_authenticated:
@@ -102,7 +100,8 @@ def blogpost(request, post_id):
                     kept = True
             keeps_count = Keep.objects.filter(blog_post=post).count()
             author_profile = get_object_or_404(UserProfile, user=post.author)
-            return render(request, 'blog/post.html', {'post': post, 'starred': starred, 'kept': kept, 'keeps_count': keeps_count, 'author_profile': author_profile, 'notification_count': get_notify_count(request.user)})
+            modify_form = PostForm(instance=post)
+            return render(request, 'blog/post.html', {'post': post, 'starred': starred, 'kept': kept, 'keeps_count': keeps_count, 'author_profile': author_profile, 'notification_count': get_notify_count(request.user), 'modify_form': modify_form})
         else:
             if not post.is_approved:
                 return redirect('index')

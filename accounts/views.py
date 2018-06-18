@@ -21,7 +21,7 @@ except ImportError:
 def get_notify_count(user):
     usernotifications = None
     if user.is_authenticated:
-        usernotifications = Notification.objects.filter(user_to_notify=user, dismissed=False).count()
+        usernotifications = Notification.objects.filter(user_to_notify=user).count()
 
     return usernotifications
 
@@ -158,7 +158,7 @@ def changepassword(request, user_id):
 def notifications(request, user_id):
     if request.user.id == user_id:
         user = get_object_or_404(User, pk=user_id)
-        notify_objs = Notification.objects.filter(user_to_notify=request.user, dismissed=False)
+        notify_objs = Notification.objects.filter(user_to_notify=request.user)
 
         return render(request, 'accounts/notifications.html',
                       {'notifications': notify_objs, 'notification_count': get_notify_count(request.user)})
@@ -171,9 +171,8 @@ def dismiss_notification(request, user_id, notify_id):
     if request.method == 'POST':
         if request.user.id == user_id:
             notification = get_object_or_404(Notification, pk=notify_id)
-            notification.dismissed = True
-            notification.save()
-            notifications = Notification.objects.filter(user_to_notify=request.user, dismissed=False)
+            notification.delete()
+            notifications = Notification.objects.filter(user_to_notify=request.user)
             return render(request, 'accounts/notifications.html',
                           {'notifications': notifications, 'notification_count': get_notify_count(request.user)})
         else:

@@ -144,10 +144,10 @@
                                                                  <p>On {{ post.dateandtime }}</p>
                                                              </div>
                                                              <div class="col s6 right-align">
-                                                                 <em><p>Written under {{ post.category }}</p></em>
+                                                                 <em><p>Written under <a href="{% url 'categoryposts' category=post.category %}"><strong>{{ post.category }}</strong></a></p></em>
                                                              </div>
                                                          </div>
-                                                         {{ post.summary | safe }} <a href="{% url 'blogpost' post.id %}">...(read more)</a>
+                                                         {{ post.body|truncatewords:50|safe }} <a href="{% url 'blogpost' post.id %}">...(read more)</a>
                                                      </div>
                                                  </div>
                                               </div>
@@ -173,10 +173,10 @@
                                                                  <p>Written by {{ keep.blog_post.author }} on {{ keep.blog_post.dateandtime }}</p>
                                                              </div>
                                                              <div class="col s6 right-align">
-                                                                 <em><p>Written under {{ keep.blog_post.category }}</p></em>
+                                                                 <em><p>Written under <a href="{% url 'categoryposts' category=keep.blog_post.category %}"><strong>{{ keep.blog_post.category }}</strong></a></p></em>
                                                              </div>
                                                          </div>
-                                                         {{ keep.blog_post.summary | safe }} <a href="{% url 'blogpost' keep.blog_post.id %}">...(read more)</a>
+                                                         {{ keep.blog_post.body|truncatewords:50|safe }} <a href="{% url 'blogpost' keep.blog_post.id %}">...(read more)</a>
                                                      </div>
                                                  </div>
                                                  <div class="row">
@@ -293,10 +293,10 @@
                                                                  <p>On {{ post.dateandtime }}</p>
                                                              </div>
                                                              <div class="col s6 right-align">
-                                                                 <em><p>Written under {{ post.category }}</p></em>
+                                                                 <em><p>Written under <a href="{% url 'categoryposts' category=post.category %}"><strong>{{ post.category }}</strong></a></p></em>
                                                              </div>
                                                          </div>
-                                                         {{ post.summary | safe }} <a href="{% url 'blogpost' post.id %}">...(read more)</a>
+                                                         {{ post.body|truncatewords:50|safe }} <a href="{% url 'blogpost' post.id %}">...(read more)</a>
                                                      </div>
                                                  </div>
                                               </div>
@@ -323,10 +323,10 @@
                                                                      <p>Written by {{ keep.blog_post.author }} on {{ keep.blog_post.dateandtime }}</p>
                                                                  </div>
                                                                  <div class="col s6 right-align">
-                                                                     <em><p>Written under {{ keep.blog_post.category }}</p></em>
+                                                                     <em><p>Written under <a href="{% url 'categoryposts' category=keep.blog_post.category %}"><strong>{{ keep.blog_post.category }}</strong></a></p></em>
                                                                  </div>
                                                              </div>
-                                                             {{ keep.blog_post.summary | safe }} <a href="{% url 'blogpost' keep.blog_post.id %}">...(read more)</a>
+                                                             {{ keep.blog_post.body|truncatewords:50|safe }} <a href="{% url 'blogpost' keep.blog_post.id %}">...(read more)</a>
                                                          </div>
                                                      </div>
                                                   </div>

@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
-{% load staticfiles %} 
+{% load staticfiles %}
+{% load formclass %}
 {% load social_share %}
 {% block notification_block %}
     {% if notification_count %}
@@ -23,6 +24,8 @@
                  background-size: cover;" class="white-text">
 {% endblock %}
 {% block content %}
+<script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/tinymce/custom.js' %}"></script>
     <style type="text/css">
         .social-facebook {
             background-image: url('{% static "socialmedia/fb.png" %}');
@@ -54,6 +57,17 @@
                     </div>
                 </div>
         {% endif %}
+        {% if modify_error %}
+            <div class="row">
+                <div class="col s12">
+                    <div class="card red white-text">
+                        <div class="card-content">
+                            {{ modify_error }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col s12">
                 <h2>{{ post.title }}</h2>
@@ -74,7 +88,7 @@
         </div>
         <div class="row">
             <div class="col s12">
-                 <h6>Written under <strong>{{ post.category }}</strong></h6>
+                 <h6>Written under <a href="{% url 'categoryposts' category=post.category %}"><strong>{{ post.category }}</strong></a></h6>
             </div>
         </div>
         <div class="row">
@@ -116,6 +130,7 @@
                         {% else %}
                             <a href="" class = "btn purple waves-effect hoverable">Stars {{ post.totalstars }}</a>
                             <a href="" class = "btn blue waves-effect hoverable">Keeps {{ post.totalkeeps }}</a>
+                            <a href="#modifypostmodal" class= "btn yellow darken-2 waves-effect hoverable modal-trigger">Modify Post</a>
                             <a href="#deleteconfirmmodal" class= "btn red waves-effect hoverable modal-trigger">Delete Post</a>
                         {% endif %}
                     {% else %}
@@ -181,6 +196,50 @@
             <a href="" class="modal-close waves-effect waves-green green btn-flat white-text">NOOOOOOO</a>
         </div>
     </div>
+        {% if modify_form %}
+            <div class="modal" id="modifypostmodal">
+                <div class="modal-content">
+                    <form id="modifypostform" method="post" action="{% url 'modifypost' post.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="input-field">
+                            <p class="flow-text black-text">Title:</p>
+                            {{ modify_form.title |addclass:'black-text' }}
+                        </div>
+                        <div class="input-field">
+                            <p class="flow-text black-text">Introduction:</p>
+                            {{ modify_form.intro |addclass:'black-text' }}
+                        </div>
+                        <div class = "input-field">
+                            <p class="flow-text black-text">Category:</p>
+                            {{ modify_form.category |addclass:'black-text' }}
+
+                        </div>
+                        <div class="input-field">
+                            <p class="flow-text black-text">Blogpost Image:</p>
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>Image</span>
+                                    {{ modify_form.image|addclass:'black-text' }}
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input value="" class="file-path validate" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <p class="flow-text">Post body:</p>
+                        <div class="input-field">
+                            {{ modify_form.body|addclass:'editable'|safe }}
+                        </div>
+                        {{ modify_form.errors }}
+                        {{ modify_form.non_field_errors }}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:{document.getElementById('modifypostform').submit();}" class="btn blue waves-effect hoverable modal-close">Modify post</a>
+                    <a href="" class="btn red waves-effect hoverable modal-close">Cancel</a>
+                </div>
+            </div>
+        {% endif %}
     <form id="starringform" action="{% url 'star' post.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="" />

@@ -26,6 +26,33 @@
     <div class="row">
         <div class="col s12">
             <h1>Blog posts under {{ category }}</h1>
+            {% if request.path == '/posts/category/Stars and Planets/' %}
+                <em>Here lie the posts, that speak about the givers of light and those that they house</em>
+            {% endif %}
+            {% if request.path == '/posts/category/Neutron stars and Pulsars/' %}
+                <em>Here lie the posts, that speak about arguably the densest and fastest spinning objects in the Universe</em>
+            {% endif %}
+            {% if request.path == '/posts/category/Black holes and Quasars/' %}
+                <em>Here lie the posts, that speak about the anomalies of gravity, some of whom lie at the heart of Galaxies bursting out rays of matter and light</em>
+            {% endif %}
+            {% if request.path == '/posts/category/Galaxies and Cosmology/' %}
+                <em>Here lie the posts, that speak about the nurseries and colonies of stellar bodies, and the mighty Universe as a whole</em>
+            {% endif %}
+            {% if request.path == '/posts/category/Relativity in Astro/' %}
+                <em>Here lie the posts, that speak about the astrophysical application of Einstein's theories of Relativity</em>
+            {% endif %}
+            {% if request.path == '/posts/category/Particle Physics and Quantum Mechanics in Astro/' %}
+                <em>Here lie the posts, that speak about how we discover the world of the very small, by studying the world of the very big</em>
+            {% endif %}
+            {% if request.path == '/posts/category/String Theory in Astro/' %}
+                <em>Here lie the posts, that speak about our front-runner for the 'theory of everything', and its cosmological implications</em>
+            {% endif %}
+            {% if request.path == '/posts/category/Astronomy/' %}
+                <em>Here lie the posts, that speak about the science of studying and documenting heavenly bodies through observation</em>
+            {% endif %}
+            {% if request.path == '/posts/category/Scientific Literature/' %}
+                <em>Here lie the posts, that speak about the jewels crafted when the enthralling magic of language is intertwined with the sheer majesty of the cosmos</em>
+            {% endif %}
         </div>
     </div>
     <hr> 
@@ -39,7 +66,7 @@
     </div>
     <div class="row">
         <div class="col s4">
-            <h6>{{ post.dateandtime }}</h6>
+            <h6>Written on {{ post.dateandtimepretty }}</h6>
         </div>
         <div class="col s8 right-align">
             <h6>Written by <a href="{% url 'userdetails' post.author.id %}">{{ post.author.username }}</a></h6>
@@ -52,19 +79,15 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <h6>Written under {{ post.category }}</h6>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
             <img src="{{ post.image.url }}" class="responsive-img" />
         </div>
     </div>
     <div class="row">
         <div class="col s12">
-            {{ post.summary | safe }}<a href="{% url 'blogpost' post.id %}">....(read more)</a>
+            {{ post.body|truncatewords:50|safe }}<a href="{% url 'blogpost' post.id %}">....(read more)</a>
         </div>
     </div>
+    <hr>
     {% empty %}
     <p class="flow-text">No posts</p>
     {% endfor %}

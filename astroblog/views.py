@@ -17,7 +17,7 @@ except ImportError:
 def get_notify_count(user):
     usernotifications = None
     if user.is_authenticated:
-        usernotifications = Notification.objects.filter(user_to_notify=user, dismissed=False).count()
+        usernotifications = Notification.objects.filter(user_to_notify=user).count()
     
     return usernotifications
 

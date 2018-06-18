@@ -40,7 +40,7 @@
     </div>
     <div class="row">
         <div class="col s4">
-            <h6>{{ keep.blog_post.dateandtime }}</h6>
+            <h6>Written on {{ keep.blog_post.dateandtimepretty }}</h6>
         </div>
     </div>
     <div class="row">
@@ -50,7 +50,7 @@
     </div>
     <div class="row">
         <div class="col s6">
-             <h6>Written under <strong>{{ keep.blog_post.category }}</strong></h6>
+             <h6>Written under <a href="{% url 'categoryposts' category=keep.blog_post.category %}"><strong>{{ keep.blog_post.category }}</strong></a></h6>
         </div>
         <div class="col s6 right-align">
             <p>Private keep: <strong>{{ keep.is_private }}</strong></p>
@@ -63,7 +63,7 @@
     </div>
     <div class="row">
         <div class="col s12">
-            {{ keep.blog_post.summary | safe }}<a href="{% url 'blogpost' keep.blog_post.id %}">....(read more)</a>
+            {{ keep.blog_post.body|truncatewords:50|safe }}<a href="{% url 'blogpost' keep.blog_post.id %}">....(read more)</a>
         </div>
     </div>
     <hr>

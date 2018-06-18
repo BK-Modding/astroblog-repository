@@ -4,6 +4,12 @@ from tinymce.models import HTMLField
 
 # Create your models here.
 
+def suffix(d):
+    return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
+
+def custom_strftime(format, t):
+    return t.strftime(format).replace('{S}', str(t.day) + suffix(t.day))
+
 class Comment(models.Model):
     comment = models.TextField()
     commenter = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -51,6 +57,9 @@ class Post(models.Model):
         
     def summary(self):
         return self.body[:300]
+
+    def dateandtimepretty(self):
+        return custom_strftime('%B {S}, %Y', self.dateandtime)
         
 class Keep(models.Model):
     blog_post = models.ForeignKey(Post, on_delete=models.CASCADE)

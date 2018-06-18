@@ -14,6 +14,7 @@ urlpatterns = [
     path('<int:post_id>/unstar/', views.unstar, name='unstar'),
     path('<int:post_id>/keep/', views.keep, name='keep'),
     path('<int:post_id>/unkeep/', views.unkeep, name='unkeep'),
+    path('<int:post_id>/modify/', views.modifypost, name='modifypost'),
     path('keep/<int:keep_id>/makepublic/', views.makekeeppublic, name='makekeeppublic'),
     path('keep/<int:keep_id>/makeprivate/', views.makekeepprivate, name='makekeepprivate'),
     path('<int:post_id>/delete/', views.delete, name='delete'),

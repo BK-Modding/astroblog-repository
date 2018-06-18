@@ -39,7 +39,7 @@
     </div>
     <div class="row">
         <div class="col s4">
-            <h6>{{ post.dateandtime }}</h6>
+            <h6>Written on {{ post.dateandtimepretty }}</h6>
         </div>
         <div class="col s8 right-align">
             <h6>Written by <a href="{% url 'userdetails' post.author.id %}">{{ post.author.username }}</a></h6>
@@ -52,7 +52,7 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <h6>Written under <strong>{{ post.category }}</strong></h6>
+            <h6>Written under <a href="{% url 'categoryposts' category=post.category %}"><strong>{{ post.category }}</strong></a></h6>
         </div>
     </div>
     <div class="row">
@@ -62,7 +62,7 @@
     </div>
     <div class="row">
         <div class="col s12">
-            {{ post.summary | safe }}<a href="{% url 'blogpost' post.id %}">....(read more)</a>
+            {{ post.body|truncatewords:50|safe }}<a href="{% url 'blogpost' post.id %}">....(read more)</a>
         </div>
     </div>
     {% empty %}
