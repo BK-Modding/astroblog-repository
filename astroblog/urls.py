@@ -28,6 +28,7 @@ urlpatterns = [
     path('aboutus/', views.aboutus, name='aboutus'),
     path('posts/', include('blog.urls')),
     path('tinymce/', include('tinymce.urls')),
+    path('captcha/', include('captcha.urls')),
     path('query/', views.query, name='query'),
     path('query/viewqueries/', views.viewqueries, name='viewqueries'),
     path('query/<int:query_id>/reply', views.replyquery, name='replyquery'),

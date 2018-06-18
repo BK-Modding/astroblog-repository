@@ -67,4 +67,5 @@ class Keep(models.Model):
     is_private = models.BooleanField(default=True)
     
     def __str__(self):
-        return self.keep_user.username + "'s keep: " + self.blogpost.title
+        return self.keep_user.username + "'s keep: " + self.blog_post.title
+

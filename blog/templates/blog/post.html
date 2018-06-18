@@ -78,7 +78,14 @@
                 <p class = "flow-text">{{ post.dateandtime }}</p>
             </div>
             <div class="col s4 offset-s4 right-align">
-                <p class = "flow-text">By <a href="{% url 'userdetails' post.author.id %}">{{ post.author.username }} <img class="responsive-img circle" width="50vw" height="50vh" src="{{ author_profile.profile_photo.url }}"></a> </p>
+                <p class = "flow-text">By <a href="{% url 'userdetails' post.author.id %}">{{ post.author.username }} 
+                {% if author_profile.profile_photo %}
+                    <img class="responsive-img circle" width="50vw" height="50vh" src="{{ author_profile.profile_photo.url }}">
+                {% else %}
+                    <img src="{% static 'socialmedia/dpdefault.png' %}" width="50vw" height="50vh" alt="Avatar" class="responsive-img circle image">
+                {% endif %}
+                </a> 
+                </p>
             </div>
         </div>
         <div class="row">
@@ -145,13 +152,6 @@
                      {% post_to_gplus request.get_full_path %}
                      {% post_to_reddit "Astrp Post: {{object.title}}" request.get_full_path %}
                      {% post_to_linkedin post.title request.get_full_path "Post to LinkedIn" %}
-                     <!-- <a class='dropdown-trigger btn blue waves-effect hoverable' href='' data-target='sharebuttons'>Share</a>
-
-                      <ul id='sharebuttons' class='dropdown-content'>
-                        <li></li>
-                        <li></li>
-                      </ul> -->
-                     
                  </div>
             </div>
             <div class="row">

@@ -10,7 +10,8 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
+from .forms import SignupForm
 try:
     from astroblog import local_settings
 except ImportError:
@@ -31,7 +32,44 @@ def signup(request):
         return redirect('index')
     else:
         if request.method == 'GET':
-            return render(request, 'accounts/authenticate.html')
+            signup_form = SignupForm()
+            return render(request, 'accounts/authenticate.html', {'signup_form': signup_form})
+        elif request.method == 'POST':
+            signup_form = SignupForm(request.POST)
+            if signup_form.is_valid():
+                user = signup_form.save()
+                user.password = make_password(signup_form.cleaned_data['password1'])
+                user.is_active = False
+                user.save()
+                user_profile = UserProfile()
+                user_profile.user = user
+                user_profile.save()
+                current_site = get_current_site(request)
+                mail_subject = 'Activate your Astroblog account.'
+                message = render_to_string('accounts/acc_active_email.html', {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                    'token': account_activation_token.make_token(user),
+                })
+                to_email = request.POST['email']
+                from_email = local_settings.DEFAULT_FROM_EMAIL
+                recipient_list = [to_email, 'kavesbteja@gmail.com']
+                send_mail(mail_subject, '', from_email, recipient_list, fail_silently=False,
+                          html_message=message)
+
+                return render(request, 'accounts/authenticate.html', {'signup_success': 'Your account has been successfully created, please verify it as an email has been sent to the registered email address', 'signup_form': signup_form})
+            else:
+                return render(request, 'accounts/authenticate.html', {'signup_form': signup_form})
+
+
+'''def signup(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+    else:
+        if request.method == 'GET':
+            signup_form = SignupForm()
+            return render(request, 'accounts/authenticate.html', {'signup_form': signup_form})
         elif request.method == 'POST':
             if request.POST['username'] and request.POST['password'] and request.POST['confirmpassword'] and \
                     request.POST['email']:
@@ -78,15 +116,16 @@ def signup(request):
                     return render(request, 'accounts/authenticate.html', {'signup_error': 'The passwords do not match'})
             else:
                 return render(request, 'accounts/authenticate.html',
-                              {'signup_error': 'Error, some fields are not filled'})
+                              {'signup_error': 'Error, some fields are not filled'})'''
 
 
 def login(request):
     if request.user.is_authenticated:
         return redirect('index')
     else:
+        signup_form = SignupForm()
         if request.method == 'GET':
-            return render(request, 'accounts/authenticate.html')
+            return render(request, 'accounts/authenticate.html', {'signup_form': signup_form})
         elif request.method == 'POST':
             user = auth.authenticate(username=request.POST['username'], password=request.POST['password'])
             if user is not None:
@@ -97,9 +136,9 @@ def login(request):
                     else:
                         return redirect('index')
                 else:
-                    return render(request, 'accounts/authenticate.html', {'login_error': 'This account has not yet been verified, please verify it before logging in'})
+                    return render(request, 'accounts/authenticate.html', {'login_error': 'This account has not yet been verified, please verify it before logging in', 'signup_form': signup_form})
             else:
-                return render(request, 'accounts/authenticate.html', {'login_error': 'Invalid credentials or this account has not yet been verified, please verify it before logging in'})
+                return render(request, 'accounts/authenticate.html', {'login_error': 'Invalid credentials or this account has not yet been verified, please verify it before logging in', 'signup_form': signup_form})
 
 def activate(request, uidb64, token):
     try:
